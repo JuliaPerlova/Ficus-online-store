@@ -1,2 +1,2 @@
 # Ficus-online-store
-This online store project was created as trainee project
+This online project was created as trainee project
