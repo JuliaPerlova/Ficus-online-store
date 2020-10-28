@@ -8,7 +8,7 @@ import { CreateTokenDto } from './dto/create-token.dto';
 
 @Injectable()
 export class TokenService {
-    constructor(@Inject('USERTOKEN_MODEL') private readonly userTokenModel: Model<IToken>) {}
+    constructor(@Inject('TOKEN_MODEL') private readonly userTokenModel: Model<IToken>) {}
 
     async create(createUserTokenDto: CreateTokenDto): Promise<IToken> {
         const userToken = new this.userTokenModel(createUserTokenDto);

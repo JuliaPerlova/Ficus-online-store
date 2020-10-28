@@ -38,14 +38,14 @@ export class AuthApiService {
       .catch((err) => { throw new HttpException(err, HttpStatus.FORBIDDEN) });
   }
 
-  changePass(data) {
-      return this.authClient.send<object>({ cmd: 'change password' }, data)
+  changePass(id: string, password: string) {
+      return this.authClient.send<object>({ cmd: 'change password' }, { id, password })
       .toPromise()
       .catch((err) => { throw new HttpException(err, HttpStatus.FORBIDDEN) });
   }
 
-  getEmailVerification(id) {
-      return this.authClient.send<object, string>({ cmd: 'get confirmation'}, id);
+  getEmailVerification(email: string) {
+      return this.authClient.send<object, string>({ cmd: 'get confirmation'}, email);
   }
 
   confirmEmail(id: string, code: string) {
@@ -60,7 +60,7 @@ export class AuthApiService {
       return this.authClient.send<object>({ cmd: 'logout'}, token);
   }
 
-  deleteUser(data) {
-      return this.authClient.send<object>({ cmd: 'delete profile' }, data);
+  deleteUser(id: string, token: string) {
+      return this.authClient.send<object>({ cmd: 'delete profile' }, { id, token });
   }
 }

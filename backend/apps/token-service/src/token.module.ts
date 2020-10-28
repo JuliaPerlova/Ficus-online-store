@@ -7,10 +7,10 @@ import { tokenProviders } from './token.provider';
 @Module({
   imports: [DatabaseModule],
   controllers: [],
-  providers: [TokenService],
-  exports: [
+  providers: [
     TokenService,
     ...tokenProviders
-  ]
+  ],
+  exports: [TokenService]
 })
-export class AppModule {}
+export class TokenModule {}

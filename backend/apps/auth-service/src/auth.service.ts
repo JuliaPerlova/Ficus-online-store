@@ -61,12 +61,12 @@ export class AuthService {
       return user;
     };
 
-    async getEmailVerification(userId: string) {
-      const user: any = await this.userService.findUserById(userId);
+    async getEmailVerification(email: string) {
+      const user: any = await this.userService.findUserByEmail(email);
       const verificationCode = code();
-      this.cache.set(userId, verificationCode, { ttl: 360 });
+      this.cache.set(user._id, verificationCode, { ttl: 360 });
 
-      return await this.mailService.confirmEmail(user.email, verificationCode);
+      return await this.mailService.confirmEmail(email, verificationCode);
     };
 
     async checkCode(userId: string, code: string) {

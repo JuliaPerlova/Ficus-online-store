@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseFilters, Redirect, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseFilters, Redirect, Param, Patch, Delete } from '@nestjs/common';
 
 import { AuthApiService } from './auth-api.service';
 
@@ -25,8 +25,38 @@ export class AuthApiController {
         return this.appService.refreshToken(token);
     }
 
+    @Post('/auth/get-confirm')
+    getConfirmation(@Body() email: string) {
+        return this.appService.getEmailVerification(email);
+    }
+
     @Post('/auth/:id/confirm') 
-    checkCode(@Param() { id }, @Body() code: string) {
+    confirmEmail(@Param() { id }, @Body() code: string) {
         return this.appService.confirmEmail(id, code);
+    }
+
+    @Post('/auth/:id/check')
+    checkCode(@Param() { id }, @Body() code: string) {
+        return this.appService.checkCode(id, code);
+    }
+
+    @Get('/auth/forgot')
+    forgotPass(@Body() email: string) {
+        return this.appService.forgotPass(email);
+    }
+
+    @Patch('/auth/:id/change_pass')
+    changePass(@Param() { id }, @Body() password: string) {
+        return this.appService.changePass(id, password);
+    }
+
+    @Delete('/logout/:token')
+    logout(@Param() { token }) {
+        return this.appService.logout(token);
+    }
+
+    @Delete('/delete/:id')
+    deleteProfile(@Param() { id }, @Body() token: string) {
+        return this.appService.deleteUser(id, token);
     }
 }

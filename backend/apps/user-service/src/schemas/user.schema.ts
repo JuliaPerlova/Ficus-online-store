@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { genderEnum } from '../enums/gender.enum';
 import { rolesEnum } from '../enums/roles.enum';
 import { statusEnum } from '../enums/status.enum';
@@ -25,7 +25,6 @@ export const UserSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 UserSchema.methods.verifyPassword = async function (password: string) {
-    console.log(await bcrypt.compare(password, this.password));
     if (await bcrypt.compare(password, this.password)) {
       return {
         _id: this._id,
