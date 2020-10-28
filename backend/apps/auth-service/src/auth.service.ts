@@ -76,7 +76,7 @@ export class AuthService {
     async checkCode(userId: string, code: string) {
         let res = await this.cache.get(userId);
         this.cache.del(userId);
-        return code === `${res}` ? true : false; 
+        return code === res ? true : false;
     }
 
     async confirmEmail(userId: string, code: string) {
