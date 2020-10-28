@@ -1,15 +1,13 @@
 import { IsEmail, IsString, Matches, IsNotEmpty } from 'class-validator';
-import { IAddress } from "../interfaces/address.interface";
-
+import { IAddress } from '../interfaces/address.interface';
 
 export class CreateUserDto {
     @IsEmail()
     readonly email: string;
 
-    @Matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/m, 
-        { message: 'Weak password' },
-    )
+    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/m, {
+        message: 'Weak password',
+    })
     readonly password: string;
 
     @IsString()
@@ -27,5 +25,4 @@ export class CreateUserDto {
     readonly createdAt: Date;
     readonly address: IAddress;
     readonly _id: string;
-
 }

@@ -9,17 +9,17 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
 @Module({
-  imports: [
-    CacheModule.register({
-      store: redisStore,
-      host: 'localhost',
-      port: 6379
-    }),
-    UserModule,
-    TokenModule,
-    MailModule
-  ],
-  controllers: [AuthController],
-  providers: [AuthService],
+    imports: [
+        CacheModule.register({
+            store: redisStore,
+            host: 'localhost',
+            port: 6379,
+        }),
+        UserModule,
+        TokenModule,
+        MailModule,
+    ],
+    controllers: [AuthController],
+    providers: [AuthService],
 })
 export class AppModule {}

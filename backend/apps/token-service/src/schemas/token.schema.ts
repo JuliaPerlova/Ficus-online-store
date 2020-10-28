@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { addDays } from "date-fns";
+import { addDays } from 'date-fns';
 
 const expireTokenDefault = () => addDays(Date.now(), 7);
 

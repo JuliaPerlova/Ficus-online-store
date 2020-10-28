@@ -10,4 +10,4 @@ export class CreateTokenDto {
 
     @IsDateString()
     expiredAt?: Date;
-};
+}

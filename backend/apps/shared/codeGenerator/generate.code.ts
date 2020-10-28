@@ -1,3 +1,3 @@
-import { uid } from "rand-token";
+import { uid } from 'rand-token';
 
 export default () => uid(6);
