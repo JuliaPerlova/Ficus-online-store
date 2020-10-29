@@ -57,7 +57,7 @@ export class AuthService {
             throw new RpcException(`${user}`);
         }
 
-        await this.getEmailVerification(`${user._id}`);
+        await this.getEmailVerification(user.email);
         return user;
     }
 
@@ -95,13 +95,13 @@ export class AuthService {
             throw new RpcException('Token was expired');
         }
 
-        const payload = jwt.verify(
+        const payload: any = jwt.verify(
             refreshToken,
             `${process.env.REFRESH_TOKEN_SECRET}`,
         );
 
         const accessToken = jwt.sign(
-            { user: payload },
+            { user: payload.user },
             `${process.env.ACESS_TOKEN_SECRET}`,
             { expiresIn: '10m' },
         );

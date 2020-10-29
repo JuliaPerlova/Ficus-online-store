@@ -3,20 +3,26 @@ import * as jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
 @Injectable()
-export class TokenGuard implements CanActivate {
+export class UserGuard implements CanActivate {
     async canActivate(context: ExecutionContext) {
-        const token = context
-            .switchToHttp()
-            .getRequest()
-            .get('x-auth-token');
+        const request = context.switchToHttp().getRequest();
         const response = context.switchToHttp().getResponse();
+        const token = request.get('x-auth-token');
+        const uId = request.params.id;
 
         if (!token) {
             return response.status(403).json('Access denied, token is missing');
         }
         try {
-            jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`);
-            return true;
+            const payload: any = jwt.verify(
+                token,
+                `${process.env.ACCESS_TOKEN_SECRET}`,
+            );
+            console.log(payload);
+            console.log(uId);
+            if (payload.user._id) {
+                return payload.user._id !== uId ? false : true;
+            }
         } catch (error) {
             if (error.name === 'TokenExpiredError') {
                 return response

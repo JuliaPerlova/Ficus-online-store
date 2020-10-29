@@ -52,6 +52,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/post-service/tsconfig.app.json"
       }
+    },
+    "actions-service": {
+      "type": "application",
+      "root": "apps/actions-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/actions-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/actions-service/tsconfig.app.json"
+      }
     }
   }
 }

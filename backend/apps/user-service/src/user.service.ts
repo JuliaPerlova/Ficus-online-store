@@ -15,9 +15,13 @@ export class UserService {
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<IUser> {
+        console.log(createUserDto);
         const password = await this.hashPass(createUserDto.password);
         const createdUser = new this.userModel({ ...createUserDto, password });
-        return await createdUser.save().catch(err => err);
+        return await createdUser.save().catch(err => {
+            console.log(err);
+            return err;
+        });
     }
 
     async checkUser(email: string, password: string): Promise<IUser> {
