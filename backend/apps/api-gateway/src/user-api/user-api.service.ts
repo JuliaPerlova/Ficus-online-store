@@ -34,27 +34,29 @@ export class UserApiService {
     }
 
     findUserById(uId: string) {
-        return this.userClient.send<object, string>(
-            { cmd: 'get user by id' },
-            uId,
-        );
+        return this.userClient
+            .send<object, string>({ cmd: 'get user by id' }, uId)
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
     }
 
     findUserByUsername(login: string) {
-        return this.userClient.send<object, string>(
-            { cmd: 'get user by username' },
-            login,
-        );
+        return this.userClient
+            .send<object, string>({ cmd: 'get user by username' }, login)
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
     }
 
     updateUser(id: string, data: object) {
-        return this.userClient.send<object>(
-            { cmd: 'update user' },
-            { id, data },
-        );
-    }
-
-    deleteUser(id: string) {
-        return this.userClient.send<object, string>({ cmd: 'delete user' }, id);
+        return this.userClient
+            .send<object>({ cmd: 'update user' }, { id, data })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
     }
 }

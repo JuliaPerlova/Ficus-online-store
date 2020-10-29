@@ -34,15 +34,17 @@ export class AuthApiService {
             .send<object>({ cmd: 'sign up' }, data)
             .toPromise()
             .catch(err => {
-                throw new HttpException(err, HttpStatus.FORBIDDEN);
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
             });
     }
 
     refreshToken(token: string) {
-        return this.authClient.send<object, string>(
-            { cmd: 'refresh token' },
-            token,
-        );
+        return this.authClient
+            .send<object, string>({ cmd: 'refresh token' }, token)
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
     }
 
     forgotPass(email) {
@@ -64,24 +66,30 @@ export class AuthApiService {
     }
 
     getEmailVerification(email: string) {
-        return this.authClient.send<object, string>(
-            { cmd: 'get confirmation' },
-            email,
-        );
+        return this.authClient
+            .send<object, string>({ cmd: 'get confirmation' }, email)
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.FORBIDDEN);
+            });
     }
 
     confirmEmail(id: string, code: string) {
-        return this.authClient.send<object>(
-            { cmd: 'confirm email' },
-            { id, code },
-        );
+        return this.authClient
+            .send<object>({ cmd: 'confirm email' }, { id, code })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.FORBIDDEN);
+            });
     }
 
     checkCode(id: string, code: string) {
-        return this.authClient.send<object>(
-            { cmd: 'check code' },
-            { id, code },
-        );
+        return this.authClient
+            .send<object>({ cmd: 'check code' }, { id, code })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.FORBIDDEN);
+            });
     }
 
     logout(token: string) {

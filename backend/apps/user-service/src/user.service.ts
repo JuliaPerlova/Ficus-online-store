@@ -17,7 +17,7 @@ export class UserService {
     async createUser(createUserDto: CreateUserDto): Promise<IUser> {
         const password = await this.hashPass(createUserDto.password);
         const createdUser = new this.userModel({ ...createUserDto, password });
-        return await createdUser.save();
+        return await createdUser.save().catch(err => err);
     }
 
     async checkUser(email: string, password: string): Promise<IUser> {
@@ -27,21 +27,28 @@ export class UserService {
     }
 
     async getAllUsers(): Promise<IUser[]> {
-        return await this.userModel.find().exec();
+        return await this.userModel
+            .find()
+            .select('-password')
+            .exec();
     }
 
     async findUserById(id: string): Promise<IUser> {
-        return await this.userModel.findById(id);
+        return await this.userModel.findById(id).select('-password');
     }
 
     async findUserByUsername(login: string): Promise<IUser[] | IUser> {
         return await this.userModel
             .find({ login: { $regex: login, $options: 'i' } })
+            .select('-password')
             .exec();
     }
 
     async findUserByEmail(email: string): Promise<IUser> {
-        return await this.userModel.findOne({ email }).exec();
+        return await this.userModel
+            .findOne({ email })
+            .select('-password')
+            .exec();
     }
 
     async updateUser(id: string, newData): Promise<IUser> {
@@ -51,6 +58,7 @@ export class UserService {
         }
         return await this.userModel
             .findByIdAndUpdate(id, newData, { new: true })
+            .select('-password')
             .exec();
     }
 

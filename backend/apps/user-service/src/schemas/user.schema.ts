@@ -1,14 +1,29 @@
 import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { isEmail } from 'class-validator';
+
 import { genderEnum } from '../enums/gender.enum';
 import { rolesEnum } from '../enums/roles.enum';
 import { statusEnum } from '../enums/status.enum';
 
 export const UserSchema = new mongoose.Schema(
     {
-        login: { type: String, required: true, index: true, unique: true },
+        login: {
+            type: String,
+            required: true,
+            index: true,
+            minlength: [3, 'Minimum username length 3 characters'],
+            maxlength: [20, 'Maximum username length 20 characters'],
+            unique: true,
+        },
         password: { type: String, required: true },
-        email: { type: String, required: true, index: true, unique: true },
+        email: {
+            type: String,
+            required: true,
+            index: true,
+            validate: [isEmail, 'Invalid email'],
+            unique: true,
+        },
         firstName: { type: String, default: null },
         lastName: { type: String, default: null },
         gender: { type: String, enum: Object.values(genderEnum) },

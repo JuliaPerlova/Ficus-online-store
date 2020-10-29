@@ -1,10 +1,6 @@
-import {
-    Injectable,
-    Inject,
-    CACHE_MANAGER,
-    UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, Inject, CACHE_MANAGER } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
+
 import { Cache } from 'cache-manager';
 
 import * as jwt from 'jsonwebtoken';
@@ -33,7 +29,7 @@ export class AuthService {
         if (!user || user.errors) {
             throw new RpcException('User was not found');
         }
-        console.log(user);
+
         if (user.status !== statusEnum.active) {
             throw new RpcException('Confirm your email');
         }
@@ -67,6 +63,10 @@ export class AuthService {
 
     async getEmailVerification(email: string) {
         const user: any = await this.userService.findUserByEmail(email);
+
+        if (!user) {
+            throw new RpcException('User with this email was not found');
+        }
         const verificationCode = code();
         await this.cache.set(`${user._id}`, verificationCode, { ttl: 360 });
         await this.mailService.confirmEmail(email, verificationCode);

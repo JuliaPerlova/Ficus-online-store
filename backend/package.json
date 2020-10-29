@@ -28,12 +28,14 @@
     "@nestjs/mongoose": "^7.0.2",
     "@nestjs/passport": "^7.1.0",
     "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/swagger": "^4.6.1",
     "bcrypt": "^5.0.0",
     "cache-manager": "^3.4.0",
     "cache-manager-redis-store": "^2.0.0",
     "class-validator": "^0.12.2",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
+    "fastify-swagger": "^3.4.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.10",
     "nodemailer": "^6.4.14",
@@ -42,7 +44,8 @@
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.5.4"
+    "rxjs": "^6.5.4",
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",

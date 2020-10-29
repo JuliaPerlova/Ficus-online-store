@@ -5,15 +5,13 @@ import {
     Body,
     Param,
     Patch,
-    Delete,
-    UseFilters,
-    Query,
+    UseGuards,
 } from '@nestjs/common';
-//import { HttpExceptionFilter } from '../../../shared/filters/src/http-exception.filter';
+import { TokenGuard } from '../../../shared/guards/token.guard';
 import { UserApiService } from './user-api.service';
 
 @Controller()
-//@UseFilters(HttpExceptionFilter)
+@UseGuards(TokenGuard)
 export class UserApiController {
     constructor(private readonly appService: UserApiService) {}
 
@@ -41,23 +39,4 @@ export class UserApiController {
     updateUser(@Param() { id }, @Body() data: object) {
         return this.appService.updateUser(id, data);
     }
-
-    @Delete('/main/users/:id/delete')
-    deleteUser(@Param() { id }) {
-        return this.appService.deleteUser(id);
-    }
-    // @Post('/main/settings')
-    // getUser(@Body() { token, uId }) {
-    //     return this.appService.getUser(token, uId);
-    // }
-
-    //     @Patch('/main/settings')
-    //     updateUser(@Body() { token, uId, data }) {
-    //         return this.appService.updateUser(token, uId, data);
-    //     }
-
-    //     @Delete('/main/settings')
-    //     deleteUser(@Body() { token, uId }) {
-    //         return this.appService.deleteUser(token, uId);
-    //     }
 }

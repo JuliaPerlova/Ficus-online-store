@@ -6,9 +6,12 @@ import {
     Param,
     Patch,
     Delete,
+    UseGuards,
+    Put,
 } from '@nestjs/common';
 
 import { AuthApiService } from './auth-api.service';
+import { TokenGuard } from '../../../shared/guards/token.guard';
 
 @Controller()
 export class AuthApiController {
@@ -19,18 +22,18 @@ export class AuthApiController {
         return this.appService.login(data);
     }
 
-    @Post('/auth/sign-up')
+    @Post('/auth/sign_up')
     signUp(@Body() data: object) {
         return this.appService.signUp(data);
     }
 
-    @Get('/auth/token/:token')
-    refreshToken(@Param() { token }) {
+    @Post('/auth/refresh')
+    refreshToken(@Body() { token }) {
         return this.appService.refreshToken(token);
     }
 
-    @Post('/auth/get-confirm')
-    getConfirmation(@Body() email: string) {
+    @Post('/auth/get_confirm')
+    getConfirmation(@Body() { email }) {
         return this.appService.getEmailVerification(email);
     }
 
@@ -54,13 +57,14 @@ export class AuthApiController {
         return this.appService.changePass(id, password);
     }
 
-    @Delete('/logout/:token')
-    logout(@Param() { token }) {
+    @Delete('/logout')
+    logout(@Body() { token }) {
         return this.appService.logout(token);
     }
 
+    @UseGuards(TokenGuard)
     @Delete('/delete/:id')
-    deleteProfile(@Param() { id }, @Body() token: string) {
+    deleteProfile(@Param() { id }, @Body() { token }) {
         return this.appService.deleteUser(id, token);
     }
 }

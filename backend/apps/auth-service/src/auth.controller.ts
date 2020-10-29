@@ -18,7 +18,7 @@ export class AuthController {
     }
 
     @MessagePattern({ cmd: 'get confirmation' })
-    getEmailVerification({ email }) {
+    getEmailVerification(email: string) {
         return this.appService.getEmailVerification(email);
     }
 
@@ -33,7 +33,7 @@ export class AuthController {
     }
 
     @MessagePattern({ cmd: 'forgot password' })
-    forgotPass(email) {
+    forgotPass(email: string) {
         return this.appService.forgotPass(email);
     }
 
@@ -43,12 +43,12 @@ export class AuthController {
     }
 
     @MessagePattern({ cmd: 'refresh token' })
-    refreshToken(token) {
+    refreshToken(token: string) {
         return this.appService.generateRefreshToken(token);
     }
 
     @MessagePattern({ cmd: 'logout' })
-    logout(token) {
+    logout(token: string) {
         return this.appService.logout(token);
     }
 
