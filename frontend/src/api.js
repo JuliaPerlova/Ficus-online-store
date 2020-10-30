@@ -31,11 +31,11 @@ axios.interceptors.response.use(
     ) {
       originalRequest._retry = true;
       return axios
-        .post("/auth/refresh_token", { refreshToken: refreshToken })
+        .post("/auth/refresh", { token: refreshToken })
         .then((res) => {
-          if (res.status === 200) {
+          if (res.status === 201) {
+            console.log(res.data);
             localStorage.setItem("accessToken", res.data.accessToken);
-            console.log("Access token refreshed!");
             return axios(originalRequest);
           }
         });
@@ -74,6 +74,19 @@ export const signIn = async (body) => {
   }
 };
 
-export const logout = () => {
+export const logout = async () => {
   return axios.delete(`/logout/${localStorage.getItem("refreshToken")}`);
+};
+
+export const createPost = async (body) => {
+  try {
+    console.log(body);
+    const serverResponse = await axios.post(
+      `/main/${localStorage.getItem("_id")}/posts/new`,
+      body
+    );
+    return serverResponse.data;
+  } catch (err) {
+    return err.response;
+  }
 };
