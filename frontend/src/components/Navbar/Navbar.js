@@ -6,15 +6,17 @@ import {
   EditOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useSelector } from "react-redux";
 
 export const Navbar = () => {
-  const token = localStorage.getItem("token");
+  const isAuth = useSelector((store) => store.authReducer.isAuth);
+
   return (
     <Menu mode='horizontal'>
       <Menu.Item icon={<FileTextOutlined />}>
         <Link to='/'>Posts</Link>
       </Menu.Item>
-      {token ? null : (
+      {isAuth ? (
         <>
           <Menu.Item icon={<EditOutlined />}>
             <Link to='/write_post'>Write a post</Link>
@@ -23,7 +25,7 @@ export const Navbar = () => {
             <Link to='/profile'>Profile</Link>
           </Menu.Item>
         </>
-      )}
+      ) : null}
     </Menu>
   );
 };

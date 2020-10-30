@@ -1,10 +1,33 @@
 import React from "react";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { signIn } from "../../api";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { SET_ACCESS_TOKEN } from "../../redux/actions/authActions";
 
 export const SignIn = () => {
-  const onFinish = (values) => {
-    console.log(values);
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const onFinish = async (values) => {
+    const response = await signIn({
+      email: values.email,
+      password: values.password,
+    });
+
+    if (response.accessToken) {
+      localStorage.setItem("accessToken", response.accessToken);
+      dispatch({
+        type: SET_ACCESS_TOKEN,
+        payload: localStorage.getItem("accessToken"),
+      });
+      localStorage.setItem("refreshToken", response.refreshToken);
+      localStorage.setItem("_id", response.id);
+      history.push("/");
+    } else {
+      message.error(response.message, 3);
+    }
   };
 
   return (
@@ -25,7 +48,6 @@ export const SignIn = () => {
               message: "Please input your password!",
             },
           ]}
-          hasFeedback
         >
           <Input prefix={<LockOutlined />} placeholder='Password' />
         </Form.Item>

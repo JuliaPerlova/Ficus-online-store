@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import "./SignUp.css";
-import { Form, Input, Button, Upload } from "antd";
-import ImgCrop from "antd-img-crop";
+import { Form, Input, Button, message } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { useHistory } from "react-router-dom";
+
+import { signUp } from "../../api";
 
 export const SignUp = () => {
-  const onFinish = (values) => {
-    console.log(values);
+  const history = useHistory();
+
+  const onFinish = async (values) => {
+    const response = await signUp({
+      email: values.email,
+      login: values.login,
+      password: values.password,
+    });
+    if (!response._id) {
+      message.error(response.message, 3);
+    } else {
+      localStorage.setItem("_id", response._id);
+      history.push("/email_confirm");
+    }
   };
 
   return (
@@ -20,7 +34,7 @@ export const SignUp = () => {
           <Input prefix={<MailOutlined />} placeholder='Email' />
         </Form.Item>
         <Form.Item
-          name='username'
+          name='login'
           rules={[{ required: true, message: "Please fill the field" }]}
         >
           <Input prefix={<UserOutlined />} placeholder='Username' />
@@ -63,7 +77,7 @@ export const SignUp = () => {
         </Form.Item>
         <Form.Item>
           <Button type='primary' htmlType='submit'>
-            Submit
+            Sign up
           </Button>
         </Form.Item>
       </Form>

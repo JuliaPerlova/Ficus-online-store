@@ -1,3 +1,4 @@
+import React from "react";
 import "./App.css";
 import "antd/dist/antd.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
@@ -9,6 +10,7 @@ import { SignUp } from "./pages/SignUp/SignUp";
 import { Posts } from "./pages/Posts/Posts";
 import { WritePost } from "./pages/WritePost/WritePost";
 import { Profile } from "./pages/Profile/Profile";
+import { EmailConfirm } from "./pages/EmailConfirm/EmailConfirm";
 
 function App() {
   return (
@@ -22,6 +24,7 @@ function App() {
           <Route exact path='/' component={Posts} />
           <Route path='/write_post' component={WritePost} />
           <Route path='/profile' component={Profile} />
+          <Route path='/email_confirm' component={EmailConfirm} />
         </Switch>
       </div>
     </Router>
