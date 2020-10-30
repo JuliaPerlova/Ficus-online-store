@@ -1,13 +1,11 @@
 import {
     Controller,
-    Get,
     Post,
     Body,
     Param,
     Patch,
     Delete,
     UseGuards,
-    Put,
 } from '@nestjs/common';
 
 import { AuthApiService } from './auth-api.service';
@@ -57,14 +55,14 @@ export class AuthApiController {
         return this.appService.changePass(id, password);
     }
 
-    @Delete('/logout')
-    logout(@Body() { token }) {
+    @Delete('/logout/:token')
+    logout(@Param() { token }) {
         return this.appService.logout(token);
     }
 
     @UseGuards(TokenGuard)
-    @Delete('/delete/:id')
-    deleteProfile(@Param() { id }, @Body() { token }) {
+    @Delete('/delete/:id/token/:token')
+    deleteProfile(@Param() { id, token }) {
         return this.appService.deleteUser(id, token);
     }
 }

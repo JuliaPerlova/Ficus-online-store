@@ -53,13 +53,13 @@
         "tsConfigPath": "apps/post-service/tsconfig.app.json"
       }
     },
-    "actions-service": {
+    "reaction-service": {
       "type": "application",
-      "root": "apps/actions-service",
+      "root": "apps/reaction-service",
       "entryFile": "main",
-      "sourceRoot": "apps/actions-service/src",
+      "sourceRoot": "apps/reaction-service/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/actions-service/tsconfig.app.json"
+        "tsConfigPath": "apps/reaction-service/tsconfig.app.json"
       }
     }
   }

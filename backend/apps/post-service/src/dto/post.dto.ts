@@ -5,6 +5,7 @@ export class CreatePostDto {
     @IsNotEmpty()
     readonly body: IPostBody;
 
+    readonly likes: Array<string>;
     readonly preview: string;
     readonly author: string;
     readonly createdAt: Date;

@@ -10,7 +10,7 @@ export const PostSchema = new mongoose.Schema(
             required: true,
             ref: userModel,
         },
-        likes: { type: Number, default: 0 },
+        likes: [{ type: mongoose.Types.ObjectId, ref: 'User', default: [] }],
         body: {
             text: {
                 type: String,

@@ -23,7 +23,7 @@ export class PostApiController {
     }
 
     @UseGuards(UserGuard)
-    @Post('/main/posts/:id/new')
+    @Post('/main/:id/posts/new')
     createPost(@Param() { id }, @Body() data: object) {
         return this.appService.createPost(id, data);
     }
@@ -37,6 +37,18 @@ export class PostApiController {
     @Get('/main/:id/posts')
     getUserPosts(@Param() { id }) {
         return this.appService.getUserPosts(id);
+    }
+
+    @UseGuards(TokenGuard)
+    @Patch('/main/:uId/posts/:postId/like')
+    likePost(@Param() { uId, postId }) {
+        return this.appService.likePost(postId, uId);
+    }
+
+    @UseGuards(TokenGuard)
+    @Patch('/main/:uId/posts/:postId/dislike')
+    dislikePost(@Param() { uId, postId }) {
+        return this.appService.dislikePost(postId, uId);
     }
 
     @UseGuards(UserGuard)

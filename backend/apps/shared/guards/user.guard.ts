@@ -11,7 +11,7 @@ export class UserGuard implements CanActivate {
         const uId = request.params.id;
 
         if (!token) {
-            return response.status(403).json('Access denied, token is missing');
+            return response.status(401).json('Access denied, token is missing');
         }
         try {
             const payload: any = jwt.verify(
@@ -26,14 +26,14 @@ export class UserGuard implements CanActivate {
         } catch (error) {
             if (error.name === 'TokenExpiredError') {
                 return response
-                    .status(403)
+                    .status(401)
                     .json('Session timed out,please login again');
             } else if (error.name === 'JsonWebTokenError') {
                 return response
-                    .status(403)
+                    .status(401)
                     .json('Invalid token,please login again!');
             } else {
-                return response.status(403).json(error);
+                return response.status(401).json(error);
             }
         }
     }

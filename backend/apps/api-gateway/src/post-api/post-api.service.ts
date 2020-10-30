@@ -49,6 +49,24 @@ export class PostApiService {
             });
     }
 
+    likePost(postId: string, uId: string) {
+        return this.postClient
+            .send<object>({ cmd: 'like post' }, { postId, uId })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.FORBIDDEN);
+            });
+    }
+
+    dislikePost(postId: string, uId: string) {
+        return this.postClient
+            .send<object>({ cmd: 'dislike post' }, { postId, uId })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.FORBIDDEN);
+            });
+    }
+
     updatePost(postId: string, data: object) {
         return this.postClient
             .send<object>({ cmd: 'update post' }, { postId, data })

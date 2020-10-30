@@ -12,7 +12,7 @@ export class TokenGuard implements CanActivate {
         const response = context.switchToHttp().getResponse();
 
         if (!token) {
-            return response.status(403).json('Access denied, token is missing');
+            return response.status(401).json('Access denied, token is missing');
         }
         try {
             jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`);
@@ -20,14 +20,14 @@ export class TokenGuard implements CanActivate {
         } catch (error) {
             if (error.name === 'TokenExpiredError') {
                 return response
-                    .status(403)
+                    .status(401)
                     .json('Session timed out,please login again');
             } else if (error.name === 'JsonWebTokenError') {
                 return response
-                    .status(403)
+                    .status(401)
                     .json('Invalid token,please login again!');
             } else {
-                return response.status(403).json(error);
+                return response.status(401).json(error);
             }
         }
     }

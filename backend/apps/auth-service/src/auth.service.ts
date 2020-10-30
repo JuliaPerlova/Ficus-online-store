@@ -47,7 +47,7 @@ export class AuthService {
         );
 
         await this.tokenService.create({ token: refreshToken, uId: user._id });
-        return { accessToken, refreshToken };
+        return { accessToken, refreshToken, id: user._id };
     }
 
     async signUp(createUserData: CreateUserDto) {

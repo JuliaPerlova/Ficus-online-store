@@ -31,6 +31,16 @@ export class PostController {
         return this.appService.updatePost(postId, data);
     }
 
+    @MessagePattern({ cmd: 'like post' })
+    like({ postId, uId }) {
+        return this.appService.like(postId, uId);
+    }
+
+    @MessagePattern({ cmd: 'dislike post' })
+    dislike({ postId, uId }) {
+        return this.appService.dislike(postId, uId);
+    }
+
     @MessagePattern({ cmd: 'delete post' })
     deletePost(postId) {
         return this.appService.deletePost(postId);
