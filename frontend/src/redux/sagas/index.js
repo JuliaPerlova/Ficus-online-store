@@ -1,7 +1,7 @@
 import { spawn } from "redux-saga/effects";
-import { authSaga } from "./authSaga";
+import writePostSaga from "./writePostSaga";
 
 export default function* rootSaga() {
   console.log("Hello From Redux-Saga!");
-  yield spawn(authSaga);
+  yield spawn(writePostSaga);
 }
