@@ -2,8 +2,6 @@ import * as mongoose from 'mongoose';
 import { postModel } from 'apps/post-service/src/models/post.model';
 import { userModel } from 'apps/user-service/src/models/user.model';
 
-import { ReplySchema } from './reply.schema';
-
 export const CommentSchema = new mongoose.Schema(
     {
         postId: {
@@ -18,7 +16,7 @@ export const CommentSchema = new mongoose.Schema(
         },
         text: { type: String, required: true },
         likes: [{ type: mongoose.Types.ObjectId, ref: 'User', default: [] }],
-        replies: { type: [ReplySchema], default: [] },
+        replies: [{ type: mongoose.Types.ObjectId, ref: 'Reply', default: [] }],
     },
     { timestamps: true },
 );

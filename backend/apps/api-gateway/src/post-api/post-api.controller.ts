@@ -7,6 +7,7 @@ import {
     Param,
     Delete,
     Patch,
+    Query,
 } from '@nestjs/common';
 import { UserGuard } from 'apps/shared/guards/user.guard';
 
@@ -18,8 +19,8 @@ import { PostApiService } from './post-api.service';
 export class PostApiController {
     constructor(private readonly appService: PostApiService) {}
     @Get('/main/posts')
-    getPosts() {
-        return this.appService.getPosts();
+    getPosts(@Query() { page, limit }) {
+        return this.appService.getPosts({ page, limit });
     }
 
     @UseGuards(UserGuard)
@@ -28,7 +29,7 @@ export class PostApiController {
         return this.appService.createPost(id, data);
     }
 
-    @Get('/main/posts/:postId')
+    @Get('/main/post/:postId')
     getPost(@Param() { postId }) {
         return this.appService.getPostById(postId);
     }

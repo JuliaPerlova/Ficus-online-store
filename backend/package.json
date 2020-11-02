@@ -33,6 +33,7 @@
     "cache-manager": "^3.4.0",
     "cache-manager-redis-store": "^2.0.0",
     "class-validator": "^0.12.2",
+    "cloudinary": "^1.23.0",
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "fastify-swagger": "^3.4.0",

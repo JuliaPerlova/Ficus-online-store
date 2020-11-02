@@ -68,6 +68,33 @@ export class ReactionApiService {
             });
     }
 
+    addReply(commentId: string, data: object) {
+        return this.reactionClient
+            .send<object>({ cmd: 'add reply' }, { commentId, data })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
+    }
+
+    updateReply(commentId: string, replyId: string, data: object) {
+        return this.reactionClient
+            .send<object>({ cmd: 'update reply' }, { commentId, replyId, data })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
+    }
+
+    deleteReply(commentId: string, replyId: string) {
+        return this.reactionClient
+            .send<object>({ cmd: 'delete reply' }, { commentId, replyId })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
+    }
+
     deleteComment(commentId: string) {
         return this.reactionClient
             .send<object, string>({ cmd: 'delete post' }, commentId)

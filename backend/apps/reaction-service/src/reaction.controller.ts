@@ -35,6 +35,22 @@ export class ReactionController {
         return this.appService.dislike(postId, uId);
     }
 
+    @MessagePattern({ cmd: 'add reply' })
+    addReply({ commentId, data }) {
+        console.log(data);
+        return this.appService.addReply(commentId, data);
+    }
+
+    @MessagePattern({ cmd: 'update reply' })
+    updateReply({ commentId, replyId,  data }) {
+        return this.appService.updateReply(commentId, replyId, data);
+    }
+
+    @MessagePattern({ cmd: 'delete reply' })
+    deleteReply({ commentId, replyId }) {
+        return this.appService.deleteReply(commentId, replyId);
+    }
+
     @MessagePattern({ cmd: 'delete comment' })
     deleteComment(commentId: string) {
         return this.appService.deleteComment(commentId);

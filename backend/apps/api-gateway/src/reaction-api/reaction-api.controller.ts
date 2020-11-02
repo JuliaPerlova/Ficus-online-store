@@ -45,6 +45,24 @@ export class ReactionApiController {
         return this.appService.dislikeComment(commentId, uId);
     }
 
+    @UseGuards(TokenGuard)
+    @Post('/main/:uId/comment/:commentId/reply')
+    addReply(@Param() { uId, commentId }, @Body() data) {
+        return this.appService.addReply(commentId, { author: uId, ...data });
+    }
+
+    @UseGuards(TokenGuard)
+    @Patch('/main/comment/:commentId/reples/:replyId')
+    updateReply(@Param() { commentId, replyId }, @Body() data) {
+        return this.appService.updateReply(commentId, replyId, data);
+    }
+
+    @UseGuards(TokenGuard)
+    @Delete('/main/comment/:commentId/reples/:replyId')
+    deleteReply(@Param() { commentId, replyId }) {
+        return this.appService.deleteReply(commentId, replyId);
+    }
+
     @UseGuards(UserGuard)
     @Patch('/main/:uId/comments/:commentId')
     updateComment(@Param() { uId, commentId }, @Body() data: object) {

@@ -8,6 +8,12 @@ export class PostService {
     constructor(
         @Inject('POST_MODEL') private readonly postModel: Model<IPost>,
     ) {}
+    
+    private populate(model) {
+        return model.populate('author', 'login avatar avatarId')
+            .populate('likes', 'login avatar avatarId')
+            .exec();
+    } 
 
     async create(uId: string, createPostDto: CreatePostDto): Promise<IPost> {
         const newPost = new this.postModel({ author: uId, ...createPostDto });
@@ -20,54 +26,42 @@ export class PostService {
             });
     }
 
-    async getAll(): Promise<IPost[]> {
-        return await this.postModel
+    async getAll(page: number, limit: number): Promise<IPost[]> {
+        return await this.populate(this.postModel
             .find()
-            .populate('author', 'login avatar avatarId')
-            .populate('likes', 'login avatar avatarId')
-            .exec();
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+        );
     }
 
     async like(postId: string, uId: string): Promise<IPost> {
-        console.log(postId);
-        console.log(uId);
-        return await this.postModel
+        return await this.populate(this.postModel
             .findByIdAndUpdate(postId, { $push: { likes: uId } }, { new: true })
-            .populate('author', 'login avatar avatarId')
-            .populate('likes', 'login avatar avatarId')
-            .exec();
+        );
     }
 
     async dislike(postId: string, uId: string): Promise<IPost> {
-        return await this.postModel
+        return await this.populate(this.postModel
             .findByIdAndUpdate(postId, { $pull: { likes: uId } }, { new: true })
-            .populate('author', 'login avatar avatarId')
-            .populate('likes', 'login avatar avatarId')
-            .exec();
+        );
     }
 
     async getPostById(postId: string): Promise<IPost> {
-        return await this.postModel
+        return await this.populate(this.postModel
             .findById(postId)
-            .populate('author', 'login avatar avatarId')
-            .populate('likes', 'login avatar avatarId')
-            .exec();
+        );
     }
 
     async getUserPosts(uId: string): Promise<IPost[]> {
-        return await this.postModel
+        return await this.populate(this.postModel
             .find({ author: uId })
-            .populate('author', 'login avatar avatarId')
-            .populate('likes', 'login avatar avatarId')
-            .exec();
+        );
     }
 
     async updatePost(uId: string, newData: CreatePostDto): Promise<IPost> {
-        return await this.postModel
+        return await this.populate(this.postModel
             .findByIdAndUpdate(uId, newData, { new: true })
-            .populate('author', 'login avatar avatarId')
-            .populate('likes', 'login avatar avatarId')
-            .exec();
+        );
     }
 
     async deletePost(postId: string): Promise<IPost> {

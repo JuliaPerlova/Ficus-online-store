@@ -12,8 +12,8 @@ export class PostController {
     }
 
     @MessagePattern({ cmd: 'get all posts' })
-    getAll() {
-        return this.appService.getAll();
+    getAll({ page, limit }) {
+        return this.appService.getAll(page, limit);
     }
 
     @MessagePattern({ cmd: 'find post by id' })

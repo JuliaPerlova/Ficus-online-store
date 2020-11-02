@@ -2,6 +2,8 @@ import * as mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { isEmail } from 'class-validator';
 
+import { randomAvatar } from 'apps/shared/colorGenerator/generate.color';
+
 import { genderEnum } from '../enums/gender.enum';
 import { rolesEnum } from '../enums/roles.enum';
 import { statusEnum } from '../enums/status.enum';
@@ -34,7 +36,7 @@ export const UserSchema = new mongoose.Schema(
             addressLine1: { type: String, default: null },
             addressLine2: { type: String, default: null },
         },
-        avatar: { type: String, default: null },
+        avatar: { type: String, default: randomAvatar },
         avatarId: { type: String, default: null },
         status: {
             type: String,
