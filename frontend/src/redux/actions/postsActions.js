@@ -1,0 +1,5 @@
+export const GET_CURRENT_PAGE = "GET_CURRENT_PAGE";
+export const GET_INITIAL_POSTS = "GET_INITIAL_POSTS";
+export const GET_POSTS = "GET_POSTS";
+export const GET_POSTS_REQUSETED = "GET_POSTS_REQUSETED";
+export const SET_LOADING = "SET_LOADING";

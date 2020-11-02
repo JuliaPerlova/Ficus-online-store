@@ -26,7 +26,7 @@ export const Header = () => {
       title='Blog'
       subTitle='This is a blog'
       extra={[
-        <>
+        <div key='4'>
           {!isAuth ? (
             <>
               <Link to='/signin'>
@@ -43,7 +43,7 @@ export const Header = () => {
               Log out
             </Button>
           )}
-        </>,
+        </div>,
       ]}
     />
   );

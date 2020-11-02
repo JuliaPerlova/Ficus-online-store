@@ -90,3 +90,12 @@ export const createPost = async (body) => {
     return err.response;
   }
 };
+
+export const getPosts = async (page) => {
+  if (page) {
+    const posts = await axios.get(`/main/posts?page=${page}&limit=5`);
+    return posts.data;
+  }
+  const posts = await axios.get("/main/posts?page=1&limit=5");
+  return posts.data;
+};

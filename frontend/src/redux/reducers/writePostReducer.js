@@ -1,14 +1,17 @@
 import {
   GET_CONTENT,
-  GET_PREVIEW,
   SET_LOADING,
   GET_RESULT,
+  SET_MESSAGE,
+  SET_ERROR,
+  CLEAR_STORE,
 } from "../actions/writePostActions";
 
 const initialState = {
   loading: false,
-  content: "",
-  preview: "",
+  content: "Write something ...",
+  message: "",
+  error: "",
   result: {},
 };
 
@@ -26,17 +29,32 @@ const writePostReducer = (state = initialState, { type, payload }) => {
         content: payload,
       };
 
-    case GET_PREVIEW:
-      return {
-        ...state,
-        preview: payload,
-      };
-
     case GET_RESULT:
       return {
         ...state,
         loading: false,
         result: payload,
+      };
+
+    case SET_MESSAGE:
+      return {
+        ...state,
+        message: payload,
+      };
+
+    case SET_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
+
+    case CLEAR_STORE:
+      return {
+        ...state,
+        content: "Write something ...",
+        preview: "",
+        message: "",
+        result: {},
       };
 
     default:
