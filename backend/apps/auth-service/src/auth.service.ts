@@ -47,17 +47,31 @@ export class AuthService {
         );
 
         await this.tokenService.create({ token: refreshToken, uId: user._id });
-        return { accessToken, refreshToken };
+        return { accessToken, refreshToken, id: user._id };
     }
 
-    async signUp(createUserData: CreateUserDto) {
-        const user: any = await this.userService.createUser(createUserData);
+    async signUp(createUserDto: CreateUserDto) {
+        const findEmail = await this.userService.findUserByEmail(
+            createUserDto.email,
+        );
+        console.log(findEmail);
+        const findLogin = await this.userService.findUserByUsername(
+            createUserDto.login,
+        );
+        console.log(findLogin.length === 0);
 
-        if (user.errors) {
-            throw new RpcException(`${user}`);
+        if (findEmail) {
+            throw new RpcException(
+                'This email is already registered in system',
+            );
         }
 
-        await this.getEmailVerification(`${user._id}`);
+        if (findLogin.length !== 0) {
+            throw new RpcException('This username is taken. Try another');
+        }
+
+        const user: any = await this.userService.createUser(createUserDto);
+        await this.getEmailVerification(user.email);
         return user;
     }
 
@@ -95,13 +109,13 @@ export class AuthService {
             throw new RpcException('Token was expired');
         }
 
-        const payload = jwt.verify(
+        const payload: any = jwt.verify(
             refreshToken,
             `${process.env.REFRESH_TOKEN_SECRET}`,
         );
 
         const accessToken = jwt.sign(
-            { user: payload },
+            { user: payload.user },
             `${process.env.ACESS_TOKEN_SECRET}`,
             { expiresIn: '10m' },
         );

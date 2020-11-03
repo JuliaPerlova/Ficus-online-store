@@ -15,9 +15,12 @@ export class UserService {
     }
 
     async createUser(createUserDto: CreateUserDto): Promise<IUser> {
+        console.log(createUserDto);
         const password = await this.hashPass(createUserDto.password);
         const createdUser = new this.userModel({ ...createUserDto, password });
-        return await createdUser.save().catch(err => err);
+        return await createdUser.save().catch(err => {
+            return err;
+        });
     }
 
     async checkUser(email: string, password: string): Promise<IUser> {
@@ -37,7 +40,7 @@ export class UserService {
         return await this.userModel.findById(id).select('-password');
     }
 
-    async findUserByUsername(login: string): Promise<IUser[] | IUser> {
+    async findUserByUsername(login: string): Promise<IUser[]> {
         return await this.userModel
             .find({ login: { $regex: login, $options: 'i' } })
             .select('-password')

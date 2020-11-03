@@ -8,6 +8,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { TokenGuard } from '../../../shared/guards/token.guard';
+import { UserGuard } from '../../../shared/guards/user.guard';
 import { UserApiService } from './user-api.service';
 
 @Controller()
@@ -35,8 +36,9 @@ export class UserApiController {
         return this.appService.findUserByUsername(username);
     }
 
-    @Patch('/main/users/:id/update')
-    updateUser(@Param() { id }, @Body() data: object) {
-        return this.appService.updateUser(id, data);
+    @UseGuards(UserGuard)
+    @Patch('/main/users/:uId/update')
+    updateUser(@Param() { uId }, @Body() data: object) {
+        return this.appService.updateUser(uId, data);
     }
 }
