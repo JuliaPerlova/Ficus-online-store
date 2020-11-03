@@ -1,12 +1,13 @@
 import React from "react";
 import "./WritePost.css";
-import { Button } from "antd";
+import { Alert, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
+  CLEAR_STORE,
   GET_CONTENT,
-  GET_PREVIEW,
   GET_RESULT_REQUESTED,
+  POST_IS_CREATED,
 } from "../../redux/actions/writePostActions";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -64,39 +65,52 @@ const editorConfiguration = {
     "imageTextAlternative",
   ],
   simpleUpload: {
-    uploadUrl: "http://localhost:4000/main/upload_image",
-    //withCredentials: true,
-    headers: {
-      "x-auth-token": `${localStorage.getItem("accessToken")}`,
-    },
+    uploadUrl: `http://192.168.88.42:3000/${localStorage.getItem(
+      "_id"
+    )}/upload_image`,
   },
-};
-
-const previewExtractor = (html, numOfextractNodes) => {
-  const htmlToDom = new DOMParser().parseFromString(html, "text/html");
-  const container = document.createElement("body");
-  htmlToDom.body.childNodes.forEach((el) => {
-    if (container.childNodes.length > numOfextractNodes) {
-      return;
-    }
-    return container.append(el.cloneNode(true));
-  });
-  return container.innerHTML;
 };
 
 export const WritePost = () => {
   const dispatch = useDispatch();
   const isLoading = useSelector((store) => store.writePostReducer.loading);
   const content = useSelector((store) => store.writePostReducer.content);
-  const result = useSelector((store) => store.writePostReducer.result);
+  const msg = useSelector((store) => store.writePostReducer.message);
+  const err = useSelector((store) => store.writePostReducer.error);
+  const isCreated = useSelector((store) => store.writePostReducer.isCreated);
+
+  const createPostHandler = () => {
+    dispatch({ type: POST_IS_CREATED });
+    dispatch({ type: GET_RESULT_REQUESTED });
+  };
 
   return (
     <>
-      <h1>WritePost page</h1>
+      {msg ? (
+        <Alert
+          message={msg}
+          type='success'
+          showIcon
+          closable
+          style={{ maxWidth: "500px", margin: "0 auto" }}
+          onClose={() => dispatch({ type: CLEAR_STORE })}
+        />
+      ) : null}
+      {err ? (
+        <Alert
+          message={err}
+          type='error'
+          showIcon
+          closable
+          style={{ maxWidth: "500px", margin: "0 auto" }}
+          onClose={() => dispatch({ type: CLEAR_STORE })}
+        />
+      ) : null}
+
       <CKEditor
         editor={ClassicEditor}
         config={editorConfiguration}
-        data='<p>Write something ... </p>'
+        data={content}
         onReady={(editor) => {
           // console.log("Editor is ready to use!", editor);
         }}
@@ -104,10 +118,6 @@ export const WritePost = () => {
           const data = editor.getData();
           //console.log({ event, editor, data });
           dispatch({ type: GET_CONTENT, payload: data });
-          dispatch({
-            type: GET_PREVIEW,
-            payload: previewExtractor(content, 3),
-          });
         }}
         onBlur={(event, editor) => {
           console.log("Blur.", editor);
@@ -120,8 +130,9 @@ export const WritePost = () => {
         type='primary'
         size='large'
         style={{ marginTop: "15px", width: "30%" }}
-        onClick={() => dispatch({ type: GET_RESULT_REQUESTED })}
+        onClick={() => createPostHandler()}
         loading={isLoading}
+        disabled={content.length < 20 || isCreated}
       >
         Create post
       </Button>

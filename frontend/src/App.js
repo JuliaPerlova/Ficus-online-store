@@ -11,6 +11,7 @@ import { Posts } from "./pages/Posts/Posts";
 import { WritePost } from "./pages/WritePost/WritePost";
 import { Profile } from "./pages/Profile/Profile";
 import { EmailConfirm } from "./pages/EmailConfirm/EmailConfirm";
+import { Post } from "./components/Post/Post";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path='/write_post' component={WritePost} />
           <Route path='/profile' component={Profile} />
           <Route path='/email_confirm' component={EmailConfirm} />
+          <Route path='/post/:postId' component={Post} />
         </Switch>
       </div>
     </Router>
