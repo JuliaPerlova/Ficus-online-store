@@ -7,7 +7,13 @@ import { ReactionApiModule } from './reaction-api/reaction-api.module';
 import { ContentApiModule } from './content-api/content-api.module';
 
 @Module({
-    imports: [AuthApiModule, UserApiModule, PostApiModule, ReactionApiModule, ContentApiModule],
+    imports: [
+        AuthApiModule,
+        UserApiModule,
+        PostApiModule,
+        ReactionApiModule,
+        ContentApiModule,
+    ],
     controllers: [],
     providers: [],
 })

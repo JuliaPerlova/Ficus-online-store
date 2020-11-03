@@ -14,5 +14,5 @@ export const reactionProviders = [
         useFactory: (connection: Connection) =>
             connection.model('Reply', ReplySchema),
         inject: ['DATABASE_CONNECTION1'],
-    }
+    },
 ];

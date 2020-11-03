@@ -37,8 +37,8 @@ export class UserApiController {
     }
 
     @UseGuards(UserGuard)
-    @Patch('/main/users/:id/update')
-    updateUser(@Param() { id }, @Body() data: object) {
-        return this.appService.updateUser(id, data);
+    @Patch('/main/users/:uId/update')
+    updateUser(@Param() { uId }, @Body() data: object) {
+        return this.appService.updateUser(uId, data);
     }
 }

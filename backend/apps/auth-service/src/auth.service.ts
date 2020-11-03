@@ -50,13 +50,27 @@ export class AuthService {
         return { accessToken, refreshToken, id: user._id };
     }
 
-    async signUp(createUserData: CreateUserDto) {
-        const user: any = await this.userService.createUser(createUserData);
+    async signUp(createUserDto: CreateUserDto) {
+        const findEmail = await this.userService.findUserByEmail(
+            createUserDto.email,
+        );
+        console.log(findEmail);
+        const findLogin = await this.userService.findUserByUsername(
+            createUserDto.login,
+        );
+        console.log(findLogin.length === 0);
 
-        if (user.errors) {
-            throw new RpcException(`${user}`);
+        if (findEmail) {
+            throw new RpcException(
+                'This email is already registered in system',
+            );
         }
 
+        if (findLogin.length !== 0) {
+            throw new RpcException('This username is taken. Try another');
+        }
+
+        const user: any = await this.userService.createUser(createUserDto);
         await this.getEmailVerification(user.email);
         return user;
     }

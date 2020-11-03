@@ -8,7 +8,7 @@ export class UserGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         const response = context.switchToHttp().getResponse();
         const token = request.get('x-auth-token');
-        const uId = request.params.id;
+        const uId = request.params.uId;
 
         if (!token) {
             return response.status(401).json('Access denied, token is missing');

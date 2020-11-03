@@ -1,6 +1,12 @@
-import { Controller, Param, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { ContentApiService } from "./content-api.service";
+import {
+    Controller,
+    Param,
+    Post,
+    UploadedFile,
+    UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ContentApiService } from './content-api.service';
 import * as multer from 'multer';
 const storage = multer.memoryStorage();
 

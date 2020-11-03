@@ -24,9 +24,9 @@ export class PostApiController {
     }
 
     @UseGuards(UserGuard)
-    @Post('/main/:id/posts/new')
-    createPost(@Param() { id }, @Body() data: object) {
-        return this.appService.createPost(id, data);
+    @Post('/main/:uId/posts/new')
+    createPost(@Param() { uId }, @Body() data: object) {
+        return this.appService.createPost(uId, data);
     }
 
     @Get('/main/post/:postId')
@@ -35,32 +35,32 @@ export class PostApiController {
     }
 
     @UseGuards(TokenGuard)
-    @Get('/main/:id/posts')
-    getUserPosts(@Param() { id }) {
-        return this.appService.getUserPosts(id);
+    @Get('/main/:uId/posts')
+    getUserPosts(@Param() { uId }) {
+        return this.appService.getUserPosts(uId);
     }
 
-    @UseGuards(TokenGuard)
+    @UseGuards(UserGuard)
     @Patch('/main/:uId/posts/:postId/like')
     likePost(@Param() { uId, postId }) {
         return this.appService.likePost(postId, uId);
     }
 
-    @UseGuards(TokenGuard)
+    @UseGuards(UserGuard)
     @Patch('/main/:uId/posts/:postId/dislike')
     dislikePost(@Param() { uId, postId }) {
         return this.appService.dislikePost(postId, uId);
     }
 
     @UseGuards(UserGuard)
-    @Patch('/main/:id/posts/:postId')
-    updatePost(@Param() { id, postId }, @Body() data: object) {
+    @Patch('/main/:uId/posts/:postId')
+    updatePost(@Param() { uId, postId }, @Body() data: object) {
         return this.appService.updatePost(postId, data);
     }
 
     @UseGuards(UserGuard)
-    @Delete('/main/:id/posts/:postId')
-    deletePost(@Param() { id, postId }) {
+    @Delete('/main/:uId/posts/:postId')
+    deletePost(@Param() { uId, postId }) {
         return this.appService.deletePost(postId);
     }
 }

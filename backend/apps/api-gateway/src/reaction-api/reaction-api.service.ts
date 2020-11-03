@@ -59,6 +59,24 @@ export class ReactionApiService {
             });
     }
 
+    likeReply(replyId: string, uId: string) {
+        return this.reactionClient
+            .send<object>({ cmd: 'like reply' }, { replyId, uId })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
+    }
+
+    dislikeReply(replyId: string, uId: string) {
+        return this.reactionClient
+            .send<object>({ cmd: 'dislike reply' }, { replyId, uId })
+            .toPromise()
+            .catch(err => {
+                throw new HttpException(err, HttpStatus.BAD_REQUEST);
+            });
+    }
+
     updateComment(commentId: string, data: object) {
         return this.reactionClient
             .send<object>({ cmd: 'update comment' }, { commentId, data })

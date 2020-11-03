@@ -33,28 +33,40 @@ export class ReactionApiController {
         return this.appService.createComment(uId, postId, data);
     }
 
-    @UseGuards(TokenGuard)
+    @UseGuards(UserGuard)
     @Post('/main/:uId/comment/:commentId/like')
     likeComment(@Param() { uId, commentId }) {
         return this.appService.likeComment(commentId, uId);
     }
-    
-    @UseGuards(TokenGuard)
+
+    @UseGuards(UserGuard)
     @Post('/main/:uId/comment/:commentId/dislike')
     dislikeComment(@Param() { uId, commentId }) {
         return this.appService.dislikeComment(commentId, uId);
     }
 
-    @UseGuards(TokenGuard)
+    @UseGuards(UserGuard)
     @Post('/main/:uId/comment/:commentId/reply')
     addReply(@Param() { uId, commentId }, @Body() data) {
         return this.appService.addReply(commentId, { author: uId, ...data });
     }
 
     @UseGuards(TokenGuard)
-    @Patch('/main/comment/:commentId/reples/:replyId')
+    @Patch('/main/comment/:commentId/replies/:replyId')
     updateReply(@Param() { commentId, replyId }, @Body() data) {
         return this.appService.updateReply(commentId, replyId, data);
+    }
+
+    @UseGuards(UserGuard)
+    @Patch('/main/:uId/replies/:replyId/like')
+    likeReply(@Param() { uId, replyId }) {
+        return this.appService.likeReply(replyId, uId);
+    }
+
+    @UseGuards(UserGuard)
+    @Patch('/main/:uId/replies/:replyId/dislike')
+    dislikeReply(@Param() { uId, replyId }) {
+        return this.appService.dislikeReply(replyId, uId);
     }
 
     @UseGuards(TokenGuard)

@@ -19,7 +19,10 @@ export class PostApiService {
     }
 
     getPosts({ page, limit }) {
-        return this.postClient.send<object>({ cmd: 'get all posts' }, { page, limit });
+        return this.postClient.send<object>(
+            { cmd: 'get all posts' },
+            { page, limit },
+        );
     }
 
     createPost(id: string, data: object) {

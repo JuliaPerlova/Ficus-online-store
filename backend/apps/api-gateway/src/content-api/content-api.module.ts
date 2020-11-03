@@ -6,11 +6,12 @@ import { ContentApiController } from './content-api.controller';
 import { ContentApiService } from './content-api.service';
 
 @Module({
-    imports: [MulterModule.registerAsync({
-        useFactory: () => ({
-            storage: memoryStorage(),
+    imports: [
+        MulterModule.registerAsync({
+            useFactory: () => ({
+                storage: memoryStorage(),
+            }),
         }),
-    })
     ],
     controllers: [ContentApiController],
     providers: [ContentApiService],

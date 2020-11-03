@@ -26,13 +26,23 @@ export class ReactionController {
     }
 
     @MessagePattern({ cmd: 'like comment' })
-    likePost({ postId, uId }) {
-        return this.appService.like(postId, uId);
+    likeComment({ commentId, uId }) {
+        return this.appService.like(commentId, uId);
     }
 
     @MessagePattern({ cmd: 'dislike comment' })
-    disikePost({ postId, uId }) {
-        return this.appService.dislike(postId, uId);
+    disikeComment({ commentId, uId }) {
+        return this.appService.dislike(commentId, uId);
+    }
+
+    @MessagePattern({ cmd: 'like reply' })
+    likeReply({ replyId, uId }) {
+        return this.appService.likeReply(replyId, uId);
+    }
+
+    @MessagePattern({ cmd: 'dislike reply' })
+    disikeReply({ replyId, uId }) {
+        return this.appService.dislikeReply(replyId, uId);
     }
 
     @MessagePattern({ cmd: 'add reply' })
@@ -42,7 +52,7 @@ export class ReactionController {
     }
 
     @MessagePattern({ cmd: 'update reply' })
-    updateReply({ commentId, replyId,  data }) {
+    updateReply({ commentId, replyId, data }) {
         return this.appService.updateReply(commentId, replyId, data);
     }
 
