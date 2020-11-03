@@ -25,7 +25,7 @@ const previewExtractor = (html, numOfextractNodes) => {
 function* createPostGenerator() {
   yield put({ type: SET_LOADING });
   const content = yield select((store) => store.writePostReducer.content);
-  const preview = previewExtractor(content, 3);
+  const preview = previewExtractor(content, 2);
   const response = yield call(createPost, {
     body: { text: content, preview: preview },
   });

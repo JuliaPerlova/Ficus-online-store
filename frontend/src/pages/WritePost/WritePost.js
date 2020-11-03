@@ -7,6 +7,7 @@ import {
   CLEAR_STORE,
   GET_CONTENT,
   GET_RESULT_REQUESTED,
+  POST_IS_CREATED,
 } from "../../redux/actions/writePostActions";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -76,6 +77,12 @@ export const WritePost = () => {
   const content = useSelector((store) => store.writePostReducer.content);
   const msg = useSelector((store) => store.writePostReducer.message);
   const err = useSelector((store) => store.writePostReducer.error);
+  const isCreated = useSelector((store) => store.writePostReducer.isCreated);
+
+  const createPostHandler = () => {
+    dispatch({ type: POST_IS_CREATED });
+    dispatch({ type: GET_RESULT_REQUESTED });
+  };
 
   return (
     <>
@@ -123,9 +130,9 @@ export const WritePost = () => {
         type='primary'
         size='large'
         style={{ marginTop: "15px", width: "30%" }}
-        onClick={() => dispatch({ type: GET_RESULT_REQUESTED })}
+        onClick={() => createPostHandler()}
         loading={isLoading}
-        disabled={content.length < 20}
+        disabled={content.length < 20 || isCreated}
       >
         Create post
       </Button>
