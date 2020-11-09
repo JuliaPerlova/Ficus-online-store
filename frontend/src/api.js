@@ -30,15 +30,13 @@ axios.interceptors.response.use(
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
-      return axios
-        .post('/auth/refresh', { token: refreshToken })
-        .then((res) => {
-          if (res.status === 201) {
-            console.log(res.data);
-            localStorage.setItem('accessToken', res.data.accessToken);
-            return axios(originalRequest);
-          }
-        });
+      return axios.put('/auth/refresh', { token: refreshToken }).then((res) => {
+        if (res.status === 201) {
+          console.log(res.data);
+          localStorage.setItem('accessToken', res.data.accessToken);
+          return axios(originalRequest);
+        }
+      });
     }
     return Promise.reject(error);
   }
@@ -55,10 +53,10 @@ export const signUp = async (body) => {
 
 export const emailConfirm = async (body) => {
   try {
-    const serverResponse = await axios.post(
-      `/auth/confirm/${localStorage.getItem('_id')}`,
-      body
-    );
+    const serverResponse = await axios.patch('/auth/confirm', {
+      id: `${localStorage.getItem('_id')}`,
+      code: body,
+    });
     return serverResponse.data;
   } catch (err) {
     return err.response.data;
@@ -82,7 +80,7 @@ export const createPost = async (body) => {
   try {
     console.log(body);
     const serverResponse = await axios.post(
-      `/main/${localStorage.getItem('_id')}/posts/new`,
+      `/${localStorage.getItem('_id')}/posts`,
       body
     );
     return serverResponse.data;
@@ -93,7 +91,7 @@ export const createPost = async (body) => {
 
 export const getPosts = async (page) => {
   if (page) {
-    const posts = await axios.get(`/main/posts?page=${page}&limit=5`);
+    const posts = await axios.get(`/posts?page=${page}&limit=5`);
     return posts.data;
   }
   const posts = await axios.get('/main/posts?page=1&limit=5');
@@ -102,7 +100,7 @@ export const getPosts = async (page) => {
 
 export const getPost = async (id) => {
   try {
-    const post = await axios.get(`/main/post/${id}`);
+    const post = await axios.get(`/posts/${id}`);
     return post.data;
   } catch (err) {
     console.error(err);
