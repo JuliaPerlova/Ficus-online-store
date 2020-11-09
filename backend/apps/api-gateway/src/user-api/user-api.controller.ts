@@ -36,7 +36,7 @@ export class UserApiController {
 
     @UseGuards(UserGuard)
     @Patch('/users/:uId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     updateUser(@Param('uId') uId: string, @Body() data: CreateUserDto) {
         return this.appService.updateUser(uId, data);
     }

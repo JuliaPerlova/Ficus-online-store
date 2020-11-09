@@ -75,7 +75,7 @@ export class AuthApiController {
 
     @UseGuards(UserGuard)
     @Delete('/auth/:uId/token/:token')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     deleteProfile(@Param() { uId, token }: DeleteProfileDto) {
         return this.appService.deleteUser(uId, token);
     }

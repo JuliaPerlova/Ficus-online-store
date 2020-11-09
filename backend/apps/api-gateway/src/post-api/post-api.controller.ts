@@ -32,7 +32,7 @@ export class PostApiController {
 
     @UseGuards(UserGuard)
     @Post('/:uId/posts')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     createPost(@Param('uId') uId: string, @Body() data: CreatePostDto) {
         return this.appService.createPost(uId, data);
     }
@@ -44,14 +44,14 @@ export class PostApiController {
 
     @UseGuards(TokenGuard)
     @Get('/:uId/posts')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     getUserPosts(@Param('uId') uId: string) {
         return this.appService.getUserPosts(uId);
     }
 
     @UseGuards(TokenGuard)
     @Put('/posts/:postId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     @ApiQuery({ name: 'action', enum: Object.keys(actionEnum) })
     addReaction(
         @Param('postId') postId: string,
@@ -65,14 +65,14 @@ export class PostApiController {
 
     @UseGuards(TokenGuard)
     @Patch('/posts/:postId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     updatePost(@Param('postId') postId: string, @Body() data: CreatePostDto) {
         return this.appService.updatePost(postId, data);
     }
 
     @UseGuards(TokenGuard)
     @Delete('/posts/:postId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     deletePost(@Param('postId') postId: string) {
         return this.appService.deletePost(postId);
     }

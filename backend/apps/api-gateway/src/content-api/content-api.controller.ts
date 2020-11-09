@@ -20,7 +20,7 @@ export class ContentApiController {
 
     @UseGuards(TokenGuard)
     @Post('/:uId/upload_image')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     @UseInterceptors(FileInterceptor('upload', { storage }))
     uploadFile(@UploadedFile() file, @Param() { uId }) {
         return this.appService.uploadImage(uId, file);

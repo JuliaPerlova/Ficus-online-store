@@ -38,7 +38,7 @@ export class ReactionApiController {
 
     @UseGuards(TokenGuard)
     @Post('/:postId/comments')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     createPost(
         @Param('postId') postId: string,
         @Body() data: CreateCommentDto,
@@ -48,7 +48,7 @@ export class ReactionApiController {
 
     @UseGuards(TokenGuard)
     @Put('/comments/:commentId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     @ApiQuery({ name: 'action', enum: Object.keys(actionEnum) })
     addReaction(
         @Param('commentId') commentId: string,
@@ -62,7 +62,7 @@ export class ReactionApiController {
 
     @UseGuards(TokenGuard)
     @Post('/comments/:commentId/replies')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     addReply(
         @Param('commentId') commentId: string,
         @Body() data: CreateReplyDto,
@@ -72,7 +72,7 @@ export class ReactionApiController {
 
     @UseGuards(TokenGuard)
     @Patch('/comments/:commentId/replies/:replyId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     updateReply(
         @Param() { commentId, replyId }: replyParamsDto,
         @Body() data: CreateReplyDto,
@@ -82,7 +82,7 @@ export class ReactionApiController {
 
     @UseGuards(TokenGuard)
     @Put('/comments/:commentId/replies/:replyId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     @ApiQuery({ name: 'action', enum: Object.keys(actionEnum) })
     addActionReply(
         @Param() { commentId, replyId }: replyParamsDto,
@@ -96,14 +96,14 @@ export class ReactionApiController {
 
     @UseGuards(TokenGuard)
     @Delete('/comments/:commentId/replies/:replyId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     deleteReply(@Param() { commentId, replyId }: replyParamsDto) {
         return this.appService.deleteReply(commentId, replyId);
     }
 
     @UseGuards(TokenGuard)
     @Patch('/comments/:commentId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     updateComment(
         @Param('commentId') commentId: string,
         @Body() data: CreateCommentDto,
@@ -113,7 +113,7 @@ export class ReactionApiController {
 
     @UseGuards(TokenGuard)
     @Delete('/comments/:commentId')
-    @ApiHeader({ name: 'token' })
+    @ApiHeader({ name: 'x-auth-token' })
     deletePost(@Param('commentId') commentId: string) {
         return this.appService.deleteComment(commentId);
     }
