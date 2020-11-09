@@ -1,30 +1,22 @@
-import React, { useEffect } from "react";
-import "./Posts.css";
-import { Pagination, Layout, Spin, Space } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from 'react';
+import './Posts.css';
+import { Pagination, Layout, Spin, Space } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { PostPreview } from "../../components/PostPreview/PostPreview";
-import { getPosts } from "../../api";
+import { PostPreview } from '../../components/PostPreview/PostPreview';
 import {
   GET_CURRENT_PAGE,
-  GET_INITIAL_POSTS,
   GET_POSTS_REQUSETED,
-} from "../../redux/actions/postsActions";
+} from '../../redux/actions/postsActions';
 
 const { Footer } = Layout;
 
 export const Posts = () => {
   const dispatch = useDispatch();
 
-  // useEffect(async () => {
-  //   const response = await getPosts();
-  //   dispatch({ type: GET_INITIAL_POSTS, payload: response });
-  // }, []);
-
   useEffect(() => {
     async function fetchPosts() {
-      const response = await getPosts();
-      dispatch({ type: GET_INITIAL_POSTS, payload: response });
+      dispatch({ type: GET_POSTS_REQUSETED });
     }
     fetchPosts();
   }, [dispatch]);
@@ -36,6 +28,7 @@ export const Posts = () => {
 
   const posts = useSelector((store) => store.postsReducer.posts.posts);
   const totalPages = useSelector((store) => store.postsReducer.posts.amount);
+  const currentPage = useSelector((store) => store.postsReducer.currentPage);
 
   return (
     <>
@@ -52,15 +45,16 @@ export const Posts = () => {
           );
         })
       ) : (
-        <Space size='middle' style={{ marginTop: 35 }}>
-          <Spin size='large' />
+        <Space size="middle" style={{ marginTop: 35 }}>
+          <Spin size="large" />
         </Space>
       )}
       <Footer>
         <Pagination
+          current={currentPage}
           total={totalPages}
           pageSize={5}
-          showQuickJumper='true'
+          showQuickJumper="true"
           onChange={pageSelectionHandler}
         />
       </Footer>
