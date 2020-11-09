@@ -7,38 +7,37 @@ import {
     Patch,
     UseGuards,
 } from '@nestjs/common';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
+import { CreateUserDto } from 'apps/user-service/src/dto/create-user.dto';
 import { TokenGuard } from '../../../shared/guards/token.guard';
 import { UserGuard } from '../../../shared/guards/user.guard';
+import { UsernameDto } from './dto/username.dto';
 import { UserApiService } from './user-api.service';
 
 @Controller()
-@UseGuards(TokenGuard)
+@ApiTags('users')
 export class UserApiController {
     constructor(private readonly appService: UserApiService) {}
 
-    @Post('/main/create')
-    createUser(@Body() data) {
-        return this.appService.createUser(data);
-    }
-
-    @Get('/main/users')
+    @Get('/users')
     getAllUsers() {
         return this.appService.getAllUsers();
     }
 
-    @Get('/main/users/:uId')
-    getUserById(@Param() uId: string) {
+    @Get('/users/:uId')
+    getUserById(@Param('uId') uId: string) {
         return this.appService.findUserById(uId);
     }
 
-    @Post('/main/users/find')
-    getUserByUsername(@Body() username: string) {
-        return this.appService.findUserByUsername(username);
+    @Post('/users/find')
+    getUserByUsername(@Body() { login }: UsernameDto) {
+        return this.appService.findUserByUsername(login);
     }
 
     @UseGuards(UserGuard)
-    @Patch('/main/users/:uId/update')
-    updateUser(@Param() { uId }, @Body() data: object) {
+    @Patch('/users/:uId')
+    @ApiHeader({ name: 'token' })
+    updateUser(@Param('uId') uId: string, @Body() data: CreateUserDto) {
         return this.appService.updateUser(uId, data);
     }
 }

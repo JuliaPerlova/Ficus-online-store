@@ -28,12 +28,12 @@ export class UserController {
     }
 
     @MessagePattern({ cmd: 'get user by id' })
-    findUserById({ uId }): Promise<IUser> {
+    findUserById(uId: string): Promise<IUser> {
         return this.userService.findUserById(uId);
     }
 
     @MessagePattern({ cmd: 'get user by username' })
-    findUserByUsername({ login }): Promise<IUser[] | IUser> {
+    findUserByUsername(login: string): Promise<IUser[] | IUser> {
         return this.userService.findUserByUsername(login);
     }
 

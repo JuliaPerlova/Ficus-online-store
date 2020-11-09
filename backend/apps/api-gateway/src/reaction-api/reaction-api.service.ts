@@ -18,9 +18,9 @@ export class ReactionApiService {
         });
     }
 
-    createComment(uId: string, postId: string, data: object) {
+    createComment(postId: string, data: object) {
         return this.reactionClient
-            .send<object>({ cmd: 'create comment' }, { uId, postId, data })
+            .send<object>({ cmd: 'create comment' }, { postId, data })
             .toPromise()
             .catch(err => {
                 throw new HttpException(err, HttpStatus.BAD_REQUEST);

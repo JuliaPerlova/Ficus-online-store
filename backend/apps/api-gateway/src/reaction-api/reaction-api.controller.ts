@@ -7,83 +7,114 @@ import {
     Param,
     Delete,
     Patch,
+    Put,
+    Query,
 } from '@nestjs/common';
 
-import { UserGuard } from 'apps/shared/guards/user.guard';
-import { TokenGuard } from 'apps/shared/guards/token.guard';
+import { UserGuard } from '../../../shared/guards/user.guard';
+import { TokenGuard } from '../../../shared/guards/token.guard';
 
 import { ReactionApiService } from './reaction-api.service';
+import { ApiHeader, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { CreateCommentDto } from 'apps/reaction-service/src/dto/create-comment.dto';
+import { actionEnum } from '../post-api/enum/action.enum';
+import { CreateReplyDto } from 'apps/reaction-service/src/dto/create-reply.dto';
+import { idDto } from './dto/id.dto';
+import { replyParamsDto } from './dto/replyParams.dto';
 
 @Controller()
+@ApiTags('comments')
 export class ReactionApiController {
     constructor(private readonly appService: ReactionApiService) {}
-    @Get('/main/:postId/comments')
-    getComments(@Param() { postId }) {
+    @Get('/:postId/comments')
+    getComments(@Param('postId') postId: string) {
         return this.appService.getComments(postId);
     }
 
-    @Get('/main/comments/:commentId')
-    getCommentById(@Param() { commentId }) {
+    @Get('/comments/:commentId')
+    getCommentById(@Param('commentId') commentId: string) {
         return this.appService.getCommentById(commentId);
     }
 
     @UseGuards(TokenGuard)
-    @Post('/main/:uId/post/:postId/comments/new')
-    createPost(@Param() { uId, postId }, @Body() data) {
-        return this.appService.createComment(uId, postId, data);
-    }
-
-    @UseGuards(UserGuard)
-    @Post('/main/:uId/comment/:commentId/like')
-    likeComment(@Param() { uId, commentId }) {
-        return this.appService.likeComment(commentId, uId);
-    }
-
-    @UseGuards(UserGuard)
-    @Post('/main/:uId/comment/:commentId/dislike')
-    dislikeComment(@Param() { uId, commentId }) {
-        return this.appService.dislikeComment(commentId, uId);
-    }
-
-    @UseGuards(UserGuard)
-    @Post('/main/:uId/comment/:commentId/reply')
-    addReply(@Param() { uId, commentId }, @Body() data) {
-        return this.appService.addReply(commentId, { author: uId, ...data });
+    @Post('/:postId/comments')
+    @ApiHeader({ name: 'token' })
+    createPost(
+        @Param('postId') postId: string,
+        @Body() data: CreateCommentDto,
+    ) {
+        return this.appService.createComment(postId, data);
     }
 
     @UseGuards(TokenGuard)
-    @Patch('/main/comment/:commentId/replies/:replyId')
-    updateReply(@Param() { commentId, replyId }, @Body() data) {
+    @Put('/comments/:commentId')
+    @ApiHeader({ name: 'token' })
+    @ApiQuery({ name: 'action', enum: Object.keys(actionEnum) })
+    addReaction(
+        @Param('commentId') commentId: string,
+        @Query('action') action: actionEnum,
+        @Body() { id }: idDto,
+    ) {
+        return action === 'like'
+            ? this.appService.likeComment(commentId, id)
+            : this.appService.dislikeComment(commentId, id);
+    }
+
+    @UseGuards(TokenGuard)
+    @Post('/comments/:commentId/replies')
+    @ApiHeader({ name: 'token' })
+    addReply(
+        @Param('commentId') commentId: string,
+        @Body() data: CreateReplyDto,
+    ) {
+        return this.appService.addReply(commentId, data);
+    }
+
+    @UseGuards(TokenGuard)
+    @Patch('/comments/:commentId/replies/:replyId')
+    @ApiHeader({ name: 'token' })
+    updateReply(
+        @Param() { commentId, replyId }: replyParamsDto,
+        @Body() data: CreateReplyDto,
+    ) {
         return this.appService.updateReply(commentId, replyId, data);
     }
 
-    @UseGuards(UserGuard)
-    @Patch('/main/:uId/replies/:replyId/like')
-    likeReply(@Param() { uId, replyId }) {
-        return this.appService.likeReply(replyId, uId);
-    }
-
-    @UseGuards(UserGuard)
-    @Patch('/main/:uId/replies/:replyId/dislike')
-    dislikeReply(@Param() { uId, replyId }) {
-        return this.appService.dislikeReply(replyId, uId);
+    @UseGuards(TokenGuard)
+    @Put('/comments/:commentId/replies/:replyId')
+    @ApiHeader({ name: 'token' })
+    @ApiQuery({ name: 'action', enum: Object.keys(actionEnum) })
+    addActionReply(
+        @Param() { commentId, replyId }: replyParamsDto,
+        @Query('action') action: actionEnum,
+        @Body() { id }: idDto,
+    ) {
+        return action === 'like'
+            ? this.appService.likeReply(replyId, id)
+            : this.appService.dislikeReply(replyId, id);
     }
 
     @UseGuards(TokenGuard)
-    @Delete('/main/comment/:commentId/reples/:replyId')
-    deleteReply(@Param() { commentId, replyId }) {
+    @Delete('/comments/:commentId/replies/:replyId')
+    @ApiHeader({ name: 'token' })
+    deleteReply(@Param() { commentId, replyId }: replyParamsDto) {
         return this.appService.deleteReply(commentId, replyId);
     }
 
-    @UseGuards(UserGuard)
-    @Patch('/main/:uId/comments/:commentId')
-    updateComment(@Param() { uId, commentId }, @Body() data: object) {
+    @UseGuards(TokenGuard)
+    @Patch('/comments/:commentId')
+    @ApiHeader({ name: 'token' })
+    updateComment(
+        @Param('commentId') commentId: string,
+        @Body() data: CreateCommentDto,
+    ) {
         return this.appService.updateComment(commentId, data);
     }
 
-    @UseGuards(UserGuard)
-    @Delete('/main/:uId/comments/:commentId')
-    deletePost(@Param() { uId, commentId }) {
+    @UseGuards(TokenGuard)
+    @Delete('/comments/:commentId')
+    @ApiHeader({ name: 'token' })
+    deletePost(@Param('commentId') commentId: string) {
         return this.appService.deleteComment(commentId);
     }
 }

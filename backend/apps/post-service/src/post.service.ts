@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { Model } from 'mongoose';
 import { CreatePostDto } from './dto/post.dto';
 import { IPost } from './interfaces/post.interface';
