@@ -1,17 +1,15 @@
-import { put, call, takeEvery, select } from "redux-saga/effects";
+import { put, call, takeEvery, select } from 'redux-saga/effects';
 
 import {
-  SET_LOADING,
   GET_POSTS,
   GET_POSTS_REQUSETED,
   GET_POST,
   GET_POST_REQUSETED,
-} from "../actions/postsActions";
+} from '../actions/postsActions';
 
-import { getPosts, getPost } from "../../api";
+import { getPosts, getPost } from '../../api';
 
 function* getPostsGenerator() {
-  yield put({ type: SET_LOADING });
   const currentPage = yield select((store) => store.postsReducer.currentPage);
   console.log(currentPage);
   const response = yield call(getPosts, currentPage);
