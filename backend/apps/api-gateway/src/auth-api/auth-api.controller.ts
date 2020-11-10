@@ -38,7 +38,7 @@ export class AuthApiController {
         return this.appService.signUp(data);
     }
 
-    @Put('/auth/refresh')
+    @Patch('/auth/refresh')
     refreshToken(@Body() { token }: TokenDto) {
         return this.appService.refreshToken(token);
     }

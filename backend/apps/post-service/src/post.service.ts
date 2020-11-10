@@ -13,7 +13,7 @@ export class PostService {
     private populate(model) {
         return model
             .populate('author', 'login avatar avatarId')
-            .populate('likes', 'login avatar avatarId')
+            //.populate('likes', 'login avatar avatarId')
             .exec();
     }
 
@@ -68,7 +68,7 @@ export class PostService {
         return await this.populate(this.postModel.find({ author: uId }));
     }
 
-    async updatePost(uId: string, newData: CreatePostDto): Promise<IPost> {
+    async updatePost(uId: string, newData): Promise<IPost> {
         return await this.populate(
             this.postModel.findByIdAndUpdate(uId, newData, { new: true }),
         );
