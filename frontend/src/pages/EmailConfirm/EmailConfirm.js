@@ -8,6 +8,7 @@ export const EmailConfirm = () => {
   const history = useHistory();
   const onFinish = async (values) => {
     const response = await emailConfirm({
+      id: localStorage.getItem("_id"),
       code: values.confirmationCode,
     });
     console.log(response);
