@@ -26,7 +26,7 @@ axios.interceptors.response.use(
     let refreshToken = localStorage.getItem("refreshToken");
     if (
       refreshToken &&
-      error.response.status === 401 &&
+      error.response.status === 403 &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
@@ -121,10 +121,24 @@ export const getProfileInfo = async () => {
 
 export const likesHandler = async (postId, action, userId) => {
   try {
-    const response = await axios.put(`/posts/${postId}?action=${action}`, {
-      id: userId,
-    });
-    return response.data;
+    if (action === "like") {
+      const response = await axios.post(`/likes/${postId}?content=Post`, {
+        author: userId,
+      });
+      return response.data;
+    } else {
+      const response = await axios.delete(`/likes/${postId}?author=${userId}`);
+      return response.data;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getLikes = async (postId) => {
+  try {
+    const likes = await axios.get(`/likes/${postId}`);
+    return likes.data;
   } catch (err) {
     console.error(err);
   }

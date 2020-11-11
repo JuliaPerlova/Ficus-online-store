@@ -5,13 +5,14 @@ import {
   GET_POSTS_REQUSETED,
   GET_POST,
   GET_POST_REQUSETED,
-  SET_LIKE,
-  SET_DISLIKE,
   SET_LIKE_REQUESTED,
   SET_DISLIKE_REQUESTED,
+  GET_LIKES,
+  GET_LIKES_REQUESTED,
+  SET_LIKE_RESULT,
 } from "../actions/postsActions";
 
-import { getPosts, getPost, likesHandler } from "../../api";
+import { getPosts, getPost, likesHandler, getLikes } from "../../api";
 
 function* getPostsGenerator() {
   const currentPage = yield select((store) => store.postsReducer.currentPage);
@@ -29,14 +30,22 @@ function* setLikeGenerator() {
   const postId = yield select((store) => store.postsReducer.currentPostId);
   const userId = localStorage.getItem("_id");
   const response = yield call(likesHandler, postId, "like", userId);
-  yield put({ type: SET_LIKE, payload: response });
+  console.log(response);
+  yield put({ type: SET_LIKE_RESULT, payload: response });
 }
 
 function* setDislikeGenerator() {
   const postId = yield select((store) => store.postsReducer.currentPostId);
   const userId = localStorage.getItem("_id");
   const response = yield call(likesHandler, postId, "dislike", userId);
-  yield put({ type: SET_DISLIKE, payload: response });
+  console.log(response);
+  yield put({ type: SET_LIKE_RESULT, payload: response });
+}
+
+function* getLikesGenerator() {
+  const postId = yield select((store) => store.postsReducer.currentPostId);
+  const response = yield call(getLikes, postId);
+  yield put({ type: GET_LIKES, payload: response });
 }
 
 export default function* postSaga() {
@@ -44,4 +53,5 @@ export default function* postSaga() {
   yield takeEvery(GET_POST_REQUSETED, getPostGenerator);
   yield takeEvery(SET_LIKE_REQUESTED, setLikeGenerator);
   yield takeEvery(SET_DISLIKE_REQUESTED, setDislikeGenerator);
+  yield takeEvery(GET_LIKES_REQUESTED, getLikesGenerator);
 }

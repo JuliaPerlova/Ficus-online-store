@@ -3,8 +3,8 @@ import {
   GET_POSTS,
   GET_CURRENT_POST_ID,
   GET_POST,
-  SET_LIKE,
-  SET_DISLIKE,
+  SET_LIKE_RESULT,
+  GET_LIKES,
 } from "../actions/postsActions";
 
 const initialState = {
@@ -12,8 +12,8 @@ const initialState = {
   posts: [],
   currentPostId: "",
   currentPost: {},
-  like: {},
-  dislike: {},
+  likeResult: {},
+  likes: [],
 };
 
 const postsReducer = (state = initialState, { type, payload }) => {
@@ -42,16 +42,16 @@ const postsReducer = (state = initialState, { type, payload }) => {
         currentPost: payload,
       };
 
-    case SET_LIKE:
+    case SET_LIKE_RESULT:
       return {
         ...state,
-        like: payload,
+        likeResult: payload,
       };
 
-    case SET_DISLIKE:
+    case GET_LIKES:
       return {
         ...state,
-        dislike: payload,
+        likes: payload,
       };
 
     default:

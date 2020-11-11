@@ -28,6 +28,7 @@ import {
   GET_POST_REQUSETED,
   SET_LIKE_REQUESTED,
   SET_DISLIKE_REQUESTED,
+  GET_LIKES_REQUESTED,
 } from "../../redux/actions/postsActions";
 
 const { Meta } = Card;
@@ -56,9 +57,6 @@ export const Post = () => {
 
   const dispatch = useDispatch();
 
-  const likes = useSelector((store) => store.postsReducer.currentPost.likes);
-  console.log(likes);
-
   useEffect(() => {
     dispatch({ type: GET_CURRENT_POST_ID, payload: postId });
     dispatch({ type: GET_POST_REQUSETED });
@@ -66,17 +64,23 @@ export const Post = () => {
 
   const content = useSelector((store) => store.postsReducer.currentPost.body);
   const author = useSelector((store) => store.postsReducer.currentPost.author);
-  // const likes = useSelector((store) => store.postsReducer.currentPost.likes);
-  // console.log(likes);
+  const likes = useSelector((store) => store.postsReducer.likes);
+  const likeResult = useSelector((store) => store.postsReducer.likeResult);
 
   const likesHandler = () => {
     const userId = localStorage.getItem("_id");
-    if (likes.includes(userId)) {
-      dispatch({ type: SET_DISLIKE_REQUESTED });
-    } else {
+    const result = likes.filter((like) => like.author === userId);
+    if (result.length === 0) {
       dispatch({ type: SET_LIKE_REQUESTED });
+    } else {
+      dispatch({ type: SET_DISLIKE_REQUESTED });
     }
   };
+
+  useEffect(() => dispatch({ type: GET_LIKES_REQUESTED }), [
+    dispatch,
+    likeResult,
+  ]);
 
   return (
     <Card
@@ -85,7 +89,7 @@ export const Post = () => {
           style={{ cursor: "default" }}
           size='small'
           overflowCount={999}
-          count={likes && likes.length}
+          count={likes.length}
         >
           <HeartOutlined
             style={{ cursor: "pointer", fontSize: 20 }}
