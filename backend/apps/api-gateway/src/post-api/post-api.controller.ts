@@ -50,20 +50,6 @@ export class PostApiController {
     }
 
     @UseGuards(TokenGuard)
-    @Put('/posts/:postId')
-    @ApiHeader({ name: 'x-auth-token' })
-    @ApiQuery({ name: 'action', enum: Object.keys(actionEnum) })
-    addReaction(
-        @Param('postId') postId: string,
-        @Query('action') action: actionEnum,
-        @Body() { id }: AddReactionDto,
-    ) {
-        return action === 'like'
-            ? this.appService.likePost(postId, id)
-            : this.appService.dislikePost(postId, id);
-    }
-
-    @UseGuards(TokenGuard)
     @Patch('/posts/:postId')
     @ApiHeader({ name: 'x-auth-token' })
     updatePost(@Param('postId') postId: string, @Body() data: CreatePostDto) {

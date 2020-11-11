@@ -10,14 +10,6 @@ export const PostSchema = new mongoose.Schema(
             required: true,
             ref: userModel,
         },
-        likes: [
-            {
-                type: mongoose.Types.ObjectId,
-                ref: 'User',
-                index: { unique: true, dropDups: true },
-                default: [],
-            },
-        ],
         body: {
             text: {
                 type: String,

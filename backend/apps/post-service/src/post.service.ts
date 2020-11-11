@@ -1,5 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
+import { ILike } from 'apps/likes-service/src/interfaces/like.interface';
+import { LikesService } from 'apps/likes-service/src/likes.service';
 import { Model } from 'mongoose';
 import { CreatePostDto } from './dto/post.dto';
 import { IPost } from './interfaces/post.interface';
@@ -8,12 +10,13 @@ import { IPost } from './interfaces/post.interface';
 export class PostService {
     constructor(
         @Inject('POST_MODEL') private readonly postModel: Model<IPost>,
+        @Inject('LIKE_MODEL') private readonly likeModel: Model<ILike>,
+        //private readonly likesService: LikesService,
     ) {}
 
     private populate(model) {
         return model
             .populate('author', 'login avatar avatarId')
-            //.populate('likes', 'login avatar avatarId')
             .exec();
     }
 
@@ -30,48 +33,44 @@ export class PostService {
 
     async getAll(page: number, limit: number) {
         const amount = (await this.postModel.find()).length;
-        const posts = await this.populate(
+        let posts = await this.populate(
             this.postModel
                 .find()
                 .sort({ createdAt: -1 })
                 .limit(limit * 1)
                 .skip((page - 1) * limit),
         );
+
+        posts = await Promise.all(posts.map(async (post) => {
+            const likes = await this.likeModel.find({contentId: post._id});
+            console.log({ ...post._doc, likes })
+            return { ...post._doc, likes };
+        }));
+
         return { amount, posts };
     }
 
-    async like(postId: string, uId: string): Promise<IPost> {
-        return await this.populate(
-            this.postModel.findByIdAndUpdate(
-                postId,
-                { $addToSet: { likes: uId } },
-                { new: true },
-            ),
-        );
-    }
-
-    async dislike(postId: string, uId: string): Promise<IPost> {
-        return await this.populate(
-            this.postModel.findByIdAndUpdate(
-                postId,
-                { $pull: { likes: uId } },
-                { new: true },
-            ),
-        );
-    }
-
     async getPostById(postId: string): Promise<IPost> {
-        return await this.populate(this.postModel.findById(postId));
+        const post = await this.populate(this.postModel.findById(postId));
+        const likes = await this.likeModel.find({contentId: post._id})
+        return { ...post._doc, likes };
     }
 
     async getUserPosts(uId: string): Promise<IPost[]> {
-        return await this.populate(this.postModel.find({ author: uId }));
+        const posts = await this.populate(this.postModel.find({ author: uId }));
+        return await Promise.all(posts.map(async (post) => {
+            const likes = await this.likeModel.find({contentId: post._id})
+            console.log({ ...post._doc, likes })
+            return { ...post._doc, likes };
+        }));
     }
 
     async updatePost(uId: string, newData): Promise<IPost> {
-        return await this.populate(
+        const post = await this.populate(
             this.postModel.findByIdAndUpdate(uId, newData, { new: true }),
         );
+        const likes = await this.likeModel.find({contentId: post._id})
+        return { ...post._doc, likes };
     }
 
     async deletePost(postId: string): Promise<IPost> {

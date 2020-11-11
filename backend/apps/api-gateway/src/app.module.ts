@@ -5,6 +5,7 @@ import { UserApiModule } from './user-api/user-api.module';
 import { PostApiModule } from './post-api/post-api.module';
 import { ReactionApiModule } from './reaction-api/reaction-api.module';
 import { ContentApiModule } from './content-api/content-api.module';
+import { LikesApiModule } from './likes-api/likes-api.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import { ContentApiModule } from './content-api/content-api.module';
         PostApiModule,
         ReactionApiModule,
         ContentApiModule,
+        LikesApiModule
     ],
     controllers: [],
     providers: [],
