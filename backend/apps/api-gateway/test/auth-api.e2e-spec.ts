@@ -52,8 +52,7 @@ describe('AuthController (e2e)', () => {
             .set('Accept', 'application/json');
 
         expect(res.status).toBe(400);
-        expect(res.body.message).toBeDefined();
-        expect(res.body.status).toBe('error');
+        expect(res.body.description).toBeDefined();
         done();
     });
 
@@ -68,10 +67,9 @@ describe('AuthController (e2e)', () => {
             .set('Accept', 'application/json');
 
         expect(res.status).toBe(400);
-        expect(res.body.message).toEqual(
+        expect(res.body.description).toEqual(
             'This email is already registered in system',
         );
-        expect(res.body.status).toBe('error');
         done();
     });
 
@@ -82,31 +80,30 @@ describe('AuthController (e2e)', () => {
             .set('Accept', 'application/json');
 
         expect(res.status).toBe(403);
-        expect(res.body.message).toEqual('Confirm your email');
-        expect(res.body.status).toBe('error');
+        expect(res.body.description).toEqual('Confirm your email');
         done();
     });
 
-    it('/auth/confirm/:id (POST) must return user data and change user status to active', async done => {
+    it('/auth/confirm (PATCH) must return user data and change user status to active', async done => {
         code = await client.get(id);
         const res = await request(app.getHttpServer())
-            .post(`/auth/confirm/${id}`)
-            .send({ code: JSON.parse(code) })
+            .patch(`/auth/confirm`)
+            .send({ id, code: JSON.parse(code) })
             .set('Accept', 'application/json');
 
         console.log(res.body);
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(200);
         expect(res.body.status).toBe('active');
         return done();
     });
 
-    it('/auth/confirm/:id (POST) must return false beacuse code was expired', async done => {
+    it('/auth/confirm (PATCH) must return false beacuse code was expired', async done => {
         const res = await request(app.getHttpServer())
-            .post(`/auth/confirm/${id}`)
-            .send({ code })
+            .patch(`/auth/confirm`)
+            .send({ id, code })
             .set('Accept', 'application/json');
 
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(200);
         expect(res.body).toEqual({});
         return done();
     });
@@ -127,34 +124,34 @@ describe('AuthController (e2e)', () => {
 
     it('/auth/refresh (PATCH) must return access token', async done => {
         const res = await request(app.getHttpServer())
-            .post(`/auth/refresh`)
+            .patch(`/auth/refresh`)
             .send({ token })
             .set('Accept', 'application/json');
 
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(200);
         expect(res.body.accessToken).toBeDefined();
         return done();
     });
 
-    it('/logout/:token (DELETE) must delete refresh token from the base', async done => {
+    it('/auth/logout/:token (DELETE) must delete refresh token from the base', async done => {
         const res = await request(app.getHttpServer()).delete(
-            `/logout/${token}`,
+            `/auth/logout/${token}`,
         );
         const accessRes = await request(app.getHttpServer())
-            .post(`/auth/refresh`)
+            .patch(`/auth/refresh`)
             .send({ token })
             .set('Accept', 'application/json');
 
         expect(res.status).toBe(200);
         expect(accessRes.status).toBe(400);
-        expect(accessRes.body.message).toEqual('Token was expired');
+        expect(accessRes.body.description).toEqual('Token was expired');
         return done();
     });
 
-    it('/auth/change_pass/:id (PATCH) must change password and return updated user data', async done => {
+    it('/auth/forgot (PATCH) must change password and return updated user data', async done => {
         const res = await request(app.getHttpServer())
-            .patch(`/auth/change_pass/${id}`)
-            .send({ password: 'b123456' })
+            .patch(`/auth/forgot`)
+            .send({ id, password: 'b123456' })
             .set('Accept', 'application/json');
 
         user.password = 'b123456';
@@ -179,9 +176,9 @@ describe('AuthController (e2e)', () => {
         return done();
     });
 
-    it('/delete/:id/token/:token (DELETE) must delete user profile', async done => {
+    it('/auth/:id/token/:token (DELETE) must delete user profile', async done => {
         const res = await request(app.getHttpServer())
-            .delete(`/delete/${id}/token/${token}`)
+            .delete(`/auth/${id}/token/${token}`)
             .set('x-auth-token', `${accessToken}`);
         const login = await request(app.getHttpServer())
             .post('/auth/login')
@@ -190,7 +187,7 @@ describe('AuthController (e2e)', () => {
 
         expect(res.status).toBe(200);
         expect(login.status).toBe(403);
-        expect(login.body.message).toEqual('User was not found');
+        expect(login.body.description).toEqual('User was not found');
         return done();
     });
 });

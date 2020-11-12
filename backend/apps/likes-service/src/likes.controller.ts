@@ -13,7 +13,7 @@ export class LikesController {
 
     @MessagePattern({ cmd: 'add like' })
     addLike({ contentId, author, onContent }) {
-        console.log({ contentId, author, onContent })
+        console.log({ contentId, author, onContent });
         return this.appService.addLike(author, contentId, onContent);
     }
 

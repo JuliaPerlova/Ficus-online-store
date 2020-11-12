@@ -5,12 +5,9 @@ import { likesProviders } from './likes.provider';
 import { LikesService } from './likes.service';
 
 @Module({
-  imports: [DatabaseModule],
-  controllers: [LikesController],
-  providers: [
-    LikesService,
-    ...likesProviders
-  ],
-  exports: [LikesService]
+    imports: [DatabaseModule],
+    controllers: [LikesController],
+    providers: [LikesService, ...likesProviders],
+    exports: [LikesService],
 })
 export class LikesModule {}

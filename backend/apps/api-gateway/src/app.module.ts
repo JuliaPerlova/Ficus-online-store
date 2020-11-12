@@ -14,7 +14,7 @@ import { LikesApiModule } from './likes-api/likes-api.module';
         PostApiModule,
         ReactionApiModule,
         ContentApiModule,
-        LikesApiModule
+        LikesApiModule,
     ],
     controllers: [],
     providers: [],

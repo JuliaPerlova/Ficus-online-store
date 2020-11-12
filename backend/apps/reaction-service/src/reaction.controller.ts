@@ -25,26 +25,6 @@ export class ReactionController {
         return this.appService.updateComment(commentId, data);
     }
 
-    @MessagePattern({ cmd: 'like comment' })
-    likeComment({ commentId, uId }) {
-        return this.appService.like(commentId, uId);
-    }
-
-    @MessagePattern({ cmd: 'dislike comment' })
-    disikeComment({ commentId, uId }) {
-        return this.appService.dislike(commentId, uId);
-    }
-
-    @MessagePattern({ cmd: 'like reply' })
-    likeReply({ replyId, uId }) {
-        return this.appService.likeReply(replyId, uId);
-    }
-
-    @MessagePattern({ cmd: 'dislike reply' })
-    disikeReply({ replyId, uId }) {
-        return this.appService.dislikeReply(replyId, uId);
-    }
-
     @MessagePattern({ cmd: 'add reply' })
     addReply({ commentId, data }) {
         console.log(data);

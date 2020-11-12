@@ -10,7 +10,7 @@ export class UserGuard implements CanActivate {
         const uId = request.params.uId;
 
         if (!token) {
-            return false;;
+            return false;
         }
         try {
             const payload: any = jwt.verify(

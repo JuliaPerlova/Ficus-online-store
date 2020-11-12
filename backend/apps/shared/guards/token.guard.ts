@@ -17,7 +17,7 @@ export class TokenGuard implements CanActivate {
             jwt.verify(token, `${process.env.ACCESS_TOKEN_SECRET}`);
             return true;
         } catch (error) {
-                return false;
+            return false;
         }
     }
 }

@@ -8,8 +8,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { ApiHeader, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from 'apps/user-service/src/dto/create-user.dto';
-import { TokenGuard } from '../../../shared/guards/token.guard';
+import { CreateUserDto } from '../../../user-service/src/dto/create-user.dto';
 import { UserGuard } from '../../../shared/guards/user.guard';
 import { UsernameDto } from './dto/username.dto';
 import { UserApiService } from './user-api.service';

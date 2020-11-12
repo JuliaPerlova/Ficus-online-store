@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ContentApiModule } from 'apps/api-gateway/src/content-api/content-api.module';
+import { ILike } from 'apps/likes-service/src/interfaces/like.interface';
 import { Model } from 'mongoose';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { IComment } from './interfaces/comment.interface';
@@ -10,20 +10,16 @@ export class ReactionService {
     constructor(
         @Inject('COMMENT_MODEL') private commentModel: Model<IComment>,
         @Inject('REPLY_MODEL') private replyModel: Model<IReply>,
+        @Inject('LIKE_MODEL') private likeModel: Model<ILike>,
     ) {}
 
     private populate(model) {
         return model
             .populate('author', 'login avatar avatarId')
-            .populate('likes', 'login avatar avatarId')
             .populate('replies')
             .populate({
                 path: 'replies',
                 populate: { path: 'author', select: 'login avatar avatarId' },
-            })
-            .populate({
-                path: 'replies',
-                populate: { path: 'likes', select: 'login avatar avatarId' },
             })
             .exec();
     }
@@ -35,51 +31,29 @@ export class ReactionService {
     }
 
     async getComments(postId: string): Promise<IComment[]> {
-        return await this.populate(this.commentModel.find({ postId }));
+        let comments = await this.populate(this.commentModel.find({ postId }));
+        comments = await Promise.all(
+            comments.map(async comment => {
+                const commentLikes = await this.likeModel.find({
+                    contentId: comment._id,
+                });
+                let replies = comment.replies;
+                replies = await Promise.all(
+                    replies.map(async reply => {
+                        const replyLikes = await this.likeModel.find({
+                            contentId: reply._id,
+                        });
+                        return { ...reply._doc, likes: replyLikes };
+                    }),
+                );
+                return { ...comment._doc, likes: commentLikes, replies };
+            }),
+        );
+        return comments;
     }
 
     async getCommentById(commentId: string): Promise<IComment> {
         return await this.populate(this.commentModel.findById(commentId));
-    }
-
-    async like(commentId: string, uId: string): Promise<IComment> {
-        return await this.populate(
-            this.commentModel.findByIdAndUpdate(
-                commentId,
-                { $addToSet: { likes: uId } },
-                { new: true },
-            ),
-        );
-    }
-
-    async dislike(commentId: string, uId: string): Promise<IComment> {
-        return await this.populate(
-            this.commentModel.findByIdAndUpdate(
-                commentId,
-                { $pull: { likes: uId } },
-                { new: true },
-            ),
-        );
-    }
-
-    async likeReply(replyId: string, uId: string): Promise<IComment> {
-        return await this.populate(
-            this.replyModel.findByIdAndUpdate(
-                replyId,
-                { $addToSet: { likes: uId } },
-                { new: true },
-            ),
-        );
-    }
-
-    async dislikeReply(replyId: string, uId: string): Promise<IComment> {
-        return await this.populate(
-            this.replyModel.findByIdAndUpdate(
-                replyId,
-                { $pull: { likes: uId } },
-                { new: true },
-            ),
-        );
     }
 
     async addReply(commentId: string, createReplyDto): Promise<IReply> {

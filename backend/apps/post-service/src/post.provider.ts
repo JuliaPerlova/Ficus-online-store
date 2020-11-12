@@ -16,5 +16,4 @@ export const postProviders = [
             connection.model('Like', LikeSchema),
         inject: ['DATABASE_CONNECTION1'],
     },
-
 ];

@@ -7,5 +7,5 @@ export const likesProviders = [
         useFactory: (connection: Connection) =>
             connection.model('Like', LikeSchema),
         inject: ['DATABASE_CONNECTION1'],
-    }
+    },
 ];

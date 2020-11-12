@@ -10,16 +10,14 @@ import {
     Query,
     Put,
 } from '@nestjs/common';
-import { ApiHeader, ApiProperty, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
 import { UserGuard } from '../../../shared/guards/user.guard';
 import { TokenGuard } from '../../../shared/guards/token.guard';
-import { CreatePostDto } from 'apps/post-service/src/dto/post.dto';
+import { CreatePostDto } from '../../../post-service/src/dto/post.dto';
 
 import { PostApiService } from './post-api.service';
 import { GetPostsDto } from './dto/get_posts.dto';
-import { AddReactionDto } from './dto/reaction.dto';
-import { actionEnum } from './enum/action.enum';
 
 @Controller()
 @ApiTags('posts')
