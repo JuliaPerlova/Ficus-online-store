@@ -143,3 +143,25 @@ export const getLikes = async (postId) => {
     console.error(err);
   }
 };
+
+export const getComments = async (postId) => {
+  try {
+    const comments = await axios.get(`/${postId}/comments`);
+    return comments.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const writeComment = async (postId, content) => {
+  try {
+    const userId = localStorage.getItem("_id");
+    const response = await axios.post(`/${postId}/comments`, {
+      author: userId,
+      text: content,
+    });
+    return response.data;
+  } catch (err) {
+    console.error(err);
+  }
+};

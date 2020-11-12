@@ -5,6 +5,9 @@ import { Card, Badge, Avatar } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
 import "./Post.css";
 
+import { CommentCreator } from "../CommentCreator/CommentCreator";
+import { CommentsList } from "../CommentsList/CommentsList";
+
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 
@@ -30,6 +33,8 @@ import {
   SET_DISLIKE_REQUESTED,
   GET_LIKES_REQUESTED,
 } from "../../redux/actions/postsActions";
+
+import { GET_COMMENTS_REQUESTED } from "../../redux/actions/commentsActions";
 
 const { Meta } = Card;
 
@@ -82,6 +87,13 @@ export const Post = () => {
     likeResult,
   ]);
 
+  const commentResult = useSelector((store) => store.commentsReducer.result);
+  useEffect(() => dispatch({ type: GET_COMMENTS_REQUESTED }), [
+    dispatch,
+    commentResult,
+  ]);
+  const comments = useSelector((store) => store.commentsReducer.comments);
+
   return (
     <Card
       actions={[
@@ -124,14 +136,18 @@ export const Post = () => {
           </Badge>
         }
         description={
-          content && (
-            <CKEditor
-              editor={ClassicEditor}
-              config={editorConfiguration}
-              data={content.text}
-              disabled={true}
-            />
-          )
+          <>
+            {content && (
+              <CKEditor
+                editor={ClassicEditor}
+                config={editorConfiguration}
+                data={content.text}
+                disabled={true}
+              />
+            )}
+            <CommentsList comments={comments} />
+            <CommentCreator />
+          </>
         }
       />
     </Card>
