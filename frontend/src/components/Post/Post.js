@@ -138,7 +138,7 @@ export const Post = () => {
           </Badge>
         }
         description={
-          <>
+          <div id='post_editor'>
             {content && (
               <CKEditor
                 editor={ClassicEditor}
@@ -149,7 +149,7 @@ export const Post = () => {
             )}
             <CommentsList comments={comments} />
             <CommentCreator />
-          </>
+          </div>
         }
       />
     </Card>
