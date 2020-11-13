@@ -9,14 +9,17 @@ export const CommentSchema = new mongoose.Schema(
             required: true,
             ref: postModel,
         },
+        commentId: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Comment',
+            default: null
+        },
         author: {
             type: mongoose.Types.ObjectId,
             required: true,
             ref: userModel,
         },
-        text: { type: String, required: true },
-        likes: [{ type: mongoose.Types.ObjectId, ref: 'User', default: [] }],
-        replies: [{ type: mongoose.Types.ObjectId, ref: 'Reply', default: [] }],
+        text: { type: String, required: true }
     },
     { timestamps: true },
 );
