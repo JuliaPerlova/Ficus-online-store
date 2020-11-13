@@ -5,19 +5,24 @@ import { Form, Button, Input, Comment, Avatar, Badge } from "antd";
 import { GET_PROFILE_INFO_REQUESTED } from "../../redux/actions/profileActions";
 import {
   SET_CURRENT_COMMENT,
+  SET_CURRENT_REPLY,
   WRITE_COMMENT_REQUESTED,
+  WRITE_REPLY_REQUESTED,
 } from "../../redux/actions/commentsActions";
 
 const { TextArea } = Input;
 
-export const CommentCreator = () => {
+export const CommentCreator = ({ isReply }) => {
   const dispatch = useDispatch();
-
   useEffect(() => dispatch({ type: GET_PROFILE_INFO_REQUESTED }), [dispatch]);
   const profileInfo = useSelector((store) => store.profileReducer.profileInfo);
 
   const currentComment = useSelector(
     (store) => store.commentsReducer.currentComment
+  );
+
+  const currentReply = useSelector(
+    (store) => store.commentsReducer.currentReply
   );
 
   return (
@@ -51,20 +56,33 @@ export const CommentCreator = () => {
           <>
             <Form.Item>
               <TextArea
-                onChange={(event) =>
-                  dispatch({
-                    type: SET_CURRENT_COMMENT,
-                    payload: event.target.value,
-                  })
-                }
-                value={currentComment}
+                onChange={(event) => {
+                  if (isReply) {
+                    dispatch({
+                      type: SET_CURRENT_REPLY,
+                      payload: event.target.value,
+                    });
+                  } else {
+                    dispatch({
+                      type: SET_CURRENT_COMMENT,
+                      payload: event.target.value,
+                    });
+                  }
+                }}
+                value={isReply ? currentReply : currentComment}
               />
             </Form.Item>
             <Form.Item>
               <Button
                 htmlType='submit'
                 type='primary'
-                onClick={() => dispatch({ type: WRITE_COMMENT_REQUESTED })}
+                onClick={() => {
+                  if (isReply) {
+                    dispatch({ type: WRITE_REPLY_REQUESTED });
+                  } else {
+                    dispatch({ type: WRITE_COMMENT_REQUESTED });
+                  }
+                }}
               >
                 Add Comment
               </Button>

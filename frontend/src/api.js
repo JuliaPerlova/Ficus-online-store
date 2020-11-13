@@ -146,18 +146,19 @@ export const getLikes = async (postId) => {
 
 export const getComments = async (postId) => {
   try {
-    const comments = await axios.get(`/${postId}/comments`);
+    const comments = await axios.get(`/comments?postId=${postId}`);
     return comments.data;
   } catch (err) {
     console.error(err);
   }
 };
 
-export const writeComment = async (postId, content) => {
+export const writeComment = async (postId, content, commentId) => {
   try {
     const userId = localStorage.getItem("_id");
-    const response = await axios.post(`/${postId}/comments`, {
+    const response = await axios.post(`/comments?postId=${postId}`, {
       author: userId,
+      commentId: commentId ? commentId : null,
       text: content,
     });
     return response.data;

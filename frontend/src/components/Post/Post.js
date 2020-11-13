@@ -88,9 +88,11 @@ export const Post = () => {
   ]);
 
   const commentResult = useSelector((store) => store.commentsReducer.result);
+  const replyResult = useSelector((store) => store.commentsReducer.replyResult);
   useEffect(() => dispatch({ type: GET_COMMENTS_REQUESTED }), [
     dispatch,
     commentResult,
+    replyResult,
   ]);
   const comments = useSelector((store) => store.commentsReducer.comments);
 

@@ -7,7 +7,13 @@ import { GET_CURRENT_COMMENT_ID } from "../../redux/actions/commentsActions";
 
 import { CommentCreator } from "../../components/CommentCreator/CommentCreator";
 
-export const CommentComponent = ({ author, content, time, commentId }) => {
+export const CommentComponent = ({
+  author,
+  content,
+  time,
+  commentId,
+  replys,
+}) => {
   const dispatch = useDispatch();
 
   const [showReply, setShowReply] = useState(false);
@@ -40,7 +46,31 @@ export const CommentComponent = ({ author, content, time, commentId }) => {
         </span>,
       ]}
     >
-      {showReply ? <CommentCreator /> : null}
+      {replys
+        ? replys.map((reply) => {
+            return (
+              <Comment
+                author={reply.author.login}
+                avatar={
+                  <Avatar
+                    style={{
+                      backgroundColor: reply.author.avatar,
+                      verticalAlign: "middle",
+                    }}
+                    size='large'
+                    gap={1}
+                  >
+                    {reply.author.login.slice(0, 1).toUpperCase()}
+                  </Avatar>
+                }
+                content={reply.text}
+                datetime={moment(reply.createdAt).fromNow()}
+                key={reply._id}
+              />
+            );
+          })
+        : null}
+      {showReply ? <CommentCreator isReply={true} /> : null}
     </Comment>
   );
 };

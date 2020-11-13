@@ -116,6 +116,7 @@ export const WritePost = () => {
         }}
         onChange={(event, editor) => {
           const data = editor.getData();
+          console.log(data);
           //console.log({ event, editor, data });
           dispatch({ type: GET_CONTENT, payload: data });
         }}
