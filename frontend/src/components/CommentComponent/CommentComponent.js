@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Comment, Avatar } from "antd";
 import moment from "moment";
 
@@ -16,11 +16,17 @@ export const CommentComponent = ({
 }) => {
   const dispatch = useDispatch();
 
+  const isAuth = useSelector((store) => store.authReducer.isAuth);
+
   const [showReply, setShowReply] = useState(false);
 
   const replyHandler = () => {
-    dispatch({ type: GET_CURRENT_COMMENT_ID, payload: commentId });
-    setShowReply((state) => !state);
+    if (!isAuth) {
+      return;
+    } else {
+      dispatch({ type: GET_CURRENT_COMMENT_ID, payload: commentId });
+      setShowReply((state) => !state);
+    }
   };
 
   return (

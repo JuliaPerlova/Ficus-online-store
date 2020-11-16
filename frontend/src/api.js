@@ -49,7 +49,7 @@ export const signUp = async (body) => {
     const serverResponse = await axios.post("/auth/sign_up", body);
     return serverResponse.data;
   } catch (err) {
-    return err.response.data;
+    return err.response.data.description;
   }
 };
 
@@ -59,7 +59,7 @@ export const emailConfirm = async (body) => {
     const serverResponse = await axios.patch("/auth/confirm", body);
     return serverResponse.data;
   } catch (err) {
-    return err.response.data;
+    return err.response.data.description;
   }
 };
 
@@ -68,7 +68,7 @@ export const signIn = async (body) => {
     const serverResponse = await axios.post("/auth/login", body);
     return serverResponse.data;
   } catch (err) {
-    return err.response.data;
+    return err.response.data.description;
   }
 };
 

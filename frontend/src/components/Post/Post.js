@@ -72,13 +72,19 @@ export const Post = () => {
   const likes = useSelector((store) => store.postsReducer.likes);
   const likeResult = useSelector((store) => store.postsReducer.likeResult);
 
+  const isAuth = useSelector((store) => store.authReducer.isAuth);
+
   const likesHandler = () => {
-    const userId = localStorage.getItem("_id");
-    const result = likes.filter((like) => like.author === userId);
-    if (result.length === 0) {
-      dispatch({ type: SET_LIKE_REQUESTED });
+    if (!isAuth) {
+      return;
     } else {
-      dispatch({ type: SET_DISLIKE_REQUESTED });
+      const userId = localStorage.getItem("_id");
+      const result = likes.filter((like) => like.author === userId);
+      if (result.length === 0) {
+        dispatch({ type: SET_LIKE_REQUESTED });
+      } else {
+        dispatch({ type: SET_DISLIKE_REQUESTED });
+      }
     }
   };
 
@@ -148,7 +154,7 @@ export const Post = () => {
               />
             )}
             <CommentsList comments={comments} />
-            <CommentCreator />
+            {isAuth ? <CommentCreator /> : null}
           </div>
         }
       />
