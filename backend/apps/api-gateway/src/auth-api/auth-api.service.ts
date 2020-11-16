@@ -66,6 +66,7 @@ export class AuthApiService {
     }
 
     getEmailVerification(email: string) {
+        console.log(email);
         return this.authClient
             .send<object, string>({ cmd: 'get confirmation' }, email)
             .toPromise()

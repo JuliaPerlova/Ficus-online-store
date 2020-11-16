@@ -27,7 +27,7 @@ export class AuthService {
     async signIn({ email, password }: LoginDto) {
         const user = await this.userService.checkUser(email, password);
         if (!user || user.errors) {
-            throw new RpcException('User was not found');
+            throw new RpcException('Wrong email or password');
         }
 
         if (user.status !== statusEnum.active) {
@@ -80,6 +80,7 @@ export class AuthService {
         const verificationCode = code();
         await this.cache.set(`${user._id}`, verificationCode, { ttl: 360 });
         await this.mailService.confirmEmail(email, verificationCode);
+        console.log(email);
         return user;
     }
 

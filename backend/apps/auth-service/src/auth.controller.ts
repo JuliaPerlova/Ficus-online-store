@@ -19,6 +19,7 @@ export class AuthController {
 
     @MessagePattern({ cmd: 'get confirmation' })
     getEmailVerification(email: string) {
+        console.log(email);
         return this.appService.getEmailVerification(email);
     }
 
