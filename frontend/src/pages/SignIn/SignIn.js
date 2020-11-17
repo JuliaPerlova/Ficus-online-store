@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input, Button, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { signIn } from "../../api";
+import { signIn, resendCode } from "../../api";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -26,7 +26,12 @@ export const SignIn = () => {
       localStorage.setItem("_id", response.id);
       history.push("/");
     } else {
-      message.error(response.message, 3);
+      console.log(response);
+      if (response === "Confirm your email") {
+        resendCode(values.email);
+        history.push("/email_confirm");
+      }
+      message.error(response, 3);
     }
   };
 
@@ -36,7 +41,13 @@ export const SignIn = () => {
       <Form name='signin' className='form' size='large' onFinish={onFinish}>
         <Form.Item
           name='email'
-          rules={[{ required: true, message: "Please fill the field" }]}
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            { required: true, message: "Please fill the field" },
+          ]}
         >
           <Input prefix={<MailOutlined />} placeholder='Email' />
         </Form.Item>
@@ -46,6 +57,11 @@ export const SignIn = () => {
             {
               required: true,
               message: "Please input your password!",
+            },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/m,
+              message:
+                "Password must contain capital, lowercase letters and numbers and also have length of 6 to 20 characters",
             },
           ]}
         >

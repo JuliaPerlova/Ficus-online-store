@@ -49,7 +49,7 @@ export const signUp = async (body) => {
     const serverResponse = await axios.post("/auth/sign_up", body);
     return serverResponse.data;
   } catch (err) {
-    return err.response.data;
+    return err.response.data.description;
   }
 };
 
@@ -59,7 +59,16 @@ export const emailConfirm = async (body) => {
     const serverResponse = await axios.patch("/auth/confirm", body);
     return serverResponse.data;
   } catch (err) {
-    return err.response.data;
+    return err.response.data.description;
+  }
+};
+
+export const resendCode = async (email) => {
+  try {
+    const response = await axios.post("/auth/confirm", { email: email });
+    return response.data;
+  } catch (err) {
+    return console.err(err);
   }
 };
 
@@ -68,7 +77,7 @@ export const signIn = async (body) => {
     const serverResponse = await axios.post("/auth/login", body);
     return serverResponse.data;
   } catch (err) {
-    return err.response.data;
+    return err.response.data.description;
   }
 };
 
@@ -139,6 +148,29 @@ export const getLikes = async (postId) => {
   try {
     const likes = await axios.get(`/likes/${postId}`);
     return likes.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getComments = async (postId) => {
+  try {
+    const comments = await axios.get(`/comments?postId=${postId}`);
+    return comments.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const writeComment = async (postId, content, commentId) => {
+  try {
+    const userId = localStorage.getItem("_id");
+    const response = await axios.post(`/comments?postId=${postId}`, {
+      author: userId,
+      commentId: commentId ? commentId : null,
+      text: content,
+    });
+    return response.data;
   } catch (err) {
     console.error(err);
   }

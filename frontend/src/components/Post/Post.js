@@ -5,6 +5,9 @@ import { Card, Badge, Avatar } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
 import "./Post.css";
 
+import { CommentCreator } from "../CommentCreator/CommentCreator";
+import { CommentsList } from "../CommentsList/CommentsList";
+
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 
@@ -18,7 +21,6 @@ import HorizontalLine from "@ckeditor/ckeditor5-horizontal-line/src/horizontalli
 import Link from "@ckeditor/ckeditor5-link/src/link";
 import Image from "@ckeditor/ckeditor5-image/src/image";
 import ImageToolbar from "@ckeditor/ckeditor5-image/src/imagetoolbar";
-import ImageCaption from "@ckeditor/ckeditor5-image/src/imagecaption";
 import ImageStyle from "@ckeditor/ckeditor5-image/src/imagestyle";
 import ImageResize from "@ckeditor/ckeditor5-image/src/imageresize";
 import LinkImage from "@ckeditor/ckeditor5-link/src/linkimage";
@@ -30,6 +32,8 @@ import {
   SET_DISLIKE_REQUESTED,
   GET_LIKES_REQUESTED,
 } from "../../redux/actions/postsActions";
+
+import { GET_COMMENTS_REQUESTED } from "../../redux/actions/commentsActions";
 
 const { Meta } = Card;
 
@@ -45,7 +49,6 @@ const editorConfiguration = {
     Link,
     Image,
     ImageToolbar,
-    ImageCaption,
     ImageStyle,
     ImageResize,
     LinkImage,
@@ -67,13 +70,19 @@ export const Post = () => {
   const likes = useSelector((store) => store.postsReducer.likes);
   const likeResult = useSelector((store) => store.postsReducer.likeResult);
 
+  const isAuth = useSelector((store) => store.authReducer.isAuth);
+
   const likesHandler = () => {
-    const userId = localStorage.getItem("_id");
-    const result = likes.filter((like) => like.author === userId);
-    if (result.length === 0) {
-      dispatch({ type: SET_LIKE_REQUESTED });
+    if (!isAuth) {
+      return;
     } else {
-      dispatch({ type: SET_DISLIKE_REQUESTED });
+      const userId = localStorage.getItem("_id");
+      const result = likes.filter((like) => like.author === userId);
+      if (result.length === 0) {
+        dispatch({ type: SET_LIKE_REQUESTED });
+      } else {
+        dispatch({ type: SET_DISLIKE_REQUESTED });
+      }
     }
   };
 
@@ -81,6 +90,15 @@ export const Post = () => {
     dispatch,
     likeResult,
   ]);
+
+  const commentResult = useSelector((store) => store.commentsReducer.result);
+  const replyResult = useSelector((store) => store.commentsReducer.replyResult);
+  useEffect(() => dispatch({ type: GET_COMMENTS_REQUESTED }), [
+    dispatch,
+    commentResult,
+    replyResult,
+  ]);
+  const comments = useSelector((store) => store.commentsReducer.comments);
 
   return (
     <Card
@@ -124,14 +142,18 @@ export const Post = () => {
           </Badge>
         }
         description={
-          content && (
-            <CKEditor
-              editor={ClassicEditor}
-              config={editorConfiguration}
-              data={content.text}
-              disabled={true}
-            />
-          )
+          <div id='post_editor'>
+            {content && (
+              <CKEditor
+                editor={ClassicEditor}
+                config={editorConfiguration}
+                data={content.text}
+                disabled={true}
+              />
+            )}
+            <CommentsList comments={comments} />
+            {isAuth ? <CommentCreator /> : null}
+          </div>
         }
       />
     </Card>

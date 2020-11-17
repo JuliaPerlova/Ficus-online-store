@@ -106,26 +106,28 @@ export const WritePost = () => {
           onClose={() => dispatch({ type: CLEAR_STORE })}
         />
       ) : null}
-
-      <CKEditor
-        editor={ClassicEditor}
-        config={editorConfiguration}
-        data={content}
-        onReady={(editor) => {
-          // console.log("Editor is ready to use!", editor);
-        }}
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          //console.log({ event, editor, data });
-          dispatch({ type: GET_CONTENT, payload: data });
-        }}
-        onBlur={(event, editor) => {
-          console.log("Blur.", editor);
-        }}
-        onFocus={(event, editor) => {
-          // console.log("Focus.", editor);
-        }}
-      />
+      <div id='write_post_editor'>
+        <CKEditor
+          editor={ClassicEditor}
+          config={editorConfiguration}
+          data={content}
+          onReady={(editor) => {
+            // console.log("Editor is ready to use!", editor);
+          }}
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            console.log(data);
+            //console.log({ event, editor, data });
+            dispatch({ type: GET_CONTENT, payload: data });
+          }}
+          onBlur={(event, editor) => {
+            console.log("Blur.", editor);
+          }}
+          onFocus={(event, editor) => {
+            // console.log("Focus.", editor);
+          }}
+        />
+      </div>
       <Button
         type='primary'
         size='large'

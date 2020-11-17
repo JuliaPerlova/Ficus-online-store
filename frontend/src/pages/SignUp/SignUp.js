@@ -29,13 +29,22 @@ export const SignUp = () => {
       <Form name='signup' className='form' size='large' onFinish={onFinish}>
         <Form.Item
           name='email'
-          rules={[{ required: true, message: "Please fill the field" }]}
+          rules={[
+            {
+              type: "email",
+              message: "The input is not valid E-mail!",
+            },
+            { required: true, message: "Please fill the field" },
+          ]}
         >
           <Input prefix={<MailOutlined />} placeholder='Email' />
         </Form.Item>
         <Form.Item
           name='login'
-          rules={[{ required: true, message: "Please fill the field" }]}
+          rules={[
+            { min: 3, message: "Username must be minimum 3 characters" },
+            { required: true, message: "Please fill the field" },
+          ]}
         >
           <Input prefix={<UserOutlined />} placeholder='Username' />
         </Form.Item>
@@ -46,10 +55,15 @@ export const SignUp = () => {
               required: true,
               message: "Please input your password!",
             },
+            {
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/m,
+              message:
+                "Password must contain capital, lowercase letters and numbers and also have length of 6 to 20 characters",
+            },
           ]}
           hasFeedback
         >
-          <Input prefix={<LockOutlined />} placeholder='Password' />
+          <Input.Password prefix={<LockOutlined />} placeholder='Password' />
         </Form.Item>
         <Form.Item
           name='confirm'
@@ -73,7 +87,10 @@ export const SignUp = () => {
             }),
           ]}
         >
-          <Input prefix={<LockOutlined />} placeholder='Confirm password' />
+          <Input.Password
+            prefix={<LockOutlined />}
+            placeholder='Confirm password'
+          />
         </Form.Item>
         <Form.Item>
           <Button type='primary' htmlType='submit'>

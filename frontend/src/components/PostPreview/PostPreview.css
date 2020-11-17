@@ -1,15 +1,15 @@
-#post_editor .ck-editor__editable_inline {
-  min-height: 58vh;
+#post_preview_editor .ck-editor__editable_inline {
+  min-height: 5vh;
 }
 
-#post_editor
+#post_preview_editor
   > div.ck.ck-reset.ck-editor.ck-rounded-corners
   > div.ck.ck-editor__main
   > div {
   border-width: 0;
 }
 
-#post_editor
+#post_preview_editor
   > div.ck.ck-reset.ck-editor.ck-rounded-corners
   > div.ck.ck-editor__top.ck-reset_all
   > div

@@ -1,10 +1,45 @@
 import React from "react";
+import "./PostPreview.css";
 import { Card, Avatar, Badge } from "antd";
 import { EllipsisOutlined, HeartOutlined } from "@ant-design/icons";
-import ReactHtmlParser from "react-html-parser";
 import { useHistory } from "react-router-dom";
 
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
+
+import Essentials from "@ckeditor/ckeditor5-essentials/src/essentials";
+import Bold from "@ckeditor/ckeditor5-basic-styles/src/bold";
+import Italic from "@ckeditor/ckeditor5-basic-styles/src/italic";
+import Paragraph from "@ckeditor/ckeditor5-paragraph/src/paragraph";
+import Heading from "@ckeditor/ckeditor5-heading/src/heading";
+import CodeBlock from "@ckeditor/ckeditor5-code-block/src/codeblock";
+import HorizontalLine from "@ckeditor/ckeditor5-horizontal-line/src/horizontalline";
+import Link from "@ckeditor/ckeditor5-link/src/link";
+import Image from "@ckeditor/ckeditor5-image/src/image";
+import ImageToolbar from "@ckeditor/ckeditor5-image/src/imagetoolbar";
+import ImageStyle from "@ckeditor/ckeditor5-image/src/imagestyle";
+import ImageResize from "@ckeditor/ckeditor5-image/src/imageresize";
+import LinkImage from "@ckeditor/ckeditor5-link/src/linkimage";
+
 const { Meta } = Card;
+
+const editorConfiguration = {
+  plugins: [
+    Essentials,
+    Bold,
+    Italic,
+    Paragraph,
+    Heading,
+    CodeBlock,
+    HorizontalLine,
+    Link,
+    Image,
+    ImageToolbar,
+    ImageStyle,
+    ImageResize,
+    LinkImage,
+  ],
+};
 
 export const PostPreview = ({
   username,
@@ -41,6 +76,7 @@ export const PostPreview = ({
               backgroundColor: "#fff",
               color: "#999",
               boxShadow: "0 0 0 1px #d9d9d9 inset",
+              zIndex: 1,
             }}
             size='small'
             count={username}
@@ -54,7 +90,16 @@ export const PostPreview = ({
             </Avatar>
           </Badge>
         }
-        description={ReactHtmlParser(preview)}
+        description={
+          <div id='post_preview_editor'>
+            <CKEditor
+              editor={ClassicEditor}
+              config={editorConfiguration}
+              data={preview}
+              disabled={true}
+            />
+          </div>
+        }
       />
     </Card>
   );
