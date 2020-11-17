@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Input, Button, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { signIn } from "../../api";
+import { signIn, resendCode } from "../../api";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -27,6 +27,10 @@ export const SignIn = () => {
       history.push("/");
     } else {
       console.log(response);
+      if (response === "Confirm your email") {
+        resendCode(values.email);
+        history.push("/email_confirm");
+      }
       message.error(response, 3);
     }
   };
@@ -55,9 +59,9 @@ export const SignIn = () => {
               message: "Please input your password!",
             },
             {
-              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/m,
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,20}$/m,
               message:
-                "Password must contain capital, lowercase letters and numbers and also have length of 8 to 20 characters",
+                "Password must contain capital, lowercase letters and numbers and also have length of 6 to 20 characters",
             },
           ]}
         >

@@ -63,6 +63,15 @@ export const emailConfirm = async (body) => {
   }
 };
 
+export const resendCode = async (email) => {
+  try {
+    const response = await axios.post("/auth/confirm", { email: email });
+    return response.data;
+  } catch (err) {
+    return console.err(err);
+  }
+};
+
 export const signIn = async (body) => {
   try {
     const serverResponse = await axios.post("/auth/login", body);

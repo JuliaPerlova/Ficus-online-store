@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Comment, Avatar } from "antd";
 import moment from "moment";
@@ -13,19 +13,19 @@ export const CommentComponent = ({
   time,
   commentId,
   replys,
+  isReplyFormOpened,
+  onClickReplyTo,
 }) => {
   const dispatch = useDispatch();
 
   const isAuth = useSelector((store) => store.authReducer.isAuth);
-
-  const [showReply, setShowReply] = useState(false);
 
   const replyHandler = () => {
     if (!isAuth) {
       return;
     } else {
       dispatch({ type: GET_CURRENT_COMMENT_ID, payload: commentId });
-      setShowReply((state) => !state);
+      onClickReplyTo();
     }
   };
 
@@ -76,7 +76,7 @@ export const CommentComponent = ({
             );
           })
         : null}
-      {showReply ? <CommentCreator isReply={true} /> : null}
+      {isReplyFormOpened ? <CommentCreator isReply={true} /> : null}
     </Comment>
   );
 };
