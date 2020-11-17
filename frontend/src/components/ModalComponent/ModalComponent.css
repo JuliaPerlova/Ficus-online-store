@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.avatar {
+  display: flex;
+  flex-direction: column;
+}
+
+.userInfo {
+  /* height: 500px; */
+}

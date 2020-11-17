@@ -74,6 +74,11 @@ export const CommentCreator = ({ isReply }) => {
             </Form.Item>
             <Form.Item>
               <Button
+                disabled={
+                  isReply
+                    ? currentReply.length < 3 || currentReply.trim() === ""
+                    : currentComment.length < 3 || currentComment.trim() === ""
+                }
                 htmlType='submit'
                 type='primary'
                 onClick={() => {

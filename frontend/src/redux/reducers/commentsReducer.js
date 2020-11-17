@@ -7,6 +7,7 @@ import {
   SET_CURRENT_REPLY,
   WRITE_REPLY_RESULT,
   CLEAR_REPLY_TEXTAREA,
+  CLEAR_REPLY_RESULT,
 } from "../actions/commentsActions";
 
 const initialState = {
@@ -66,6 +67,12 @@ const commentsReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         currentReply: "",
+      };
+
+    case CLEAR_REPLY_RESULT:
+      return {
+        ...state,
+        replyResult: false,
       };
 
     default:

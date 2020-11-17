@@ -1,10 +1,22 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { List } from "antd";
 
 import { CommentComponent } from "../CommentComponent/CommentComponent";
 
+import { CLEAR_REPLY_RESULT } from "../../redux/actions/commentsActions";
+
 export const CommentsList = ({ comments }) => {
   const [replyIsOpen, setIsOpen] = useState("");
+
+  const replyResult = useSelector((store) => store.commentsReducer.replyResult);
+
+  const dispatch = useDispatch();
+
+  if (replyResult) {
+    dispatch({ type: CLEAR_REPLY_RESULT });
+    setIsOpen("");
+  }
 
   return (
     <List

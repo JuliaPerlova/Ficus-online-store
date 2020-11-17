@@ -175,3 +175,15 @@ export const writeComment = async (postId, content, commentId) => {
     console.error(err);
   }
 };
+
+export const uploadAvatar = async (formData) => {
+  try {
+    const response = await axios.post(
+      `/${localStorage.getItem("_id")}/upload_image`,
+      formData
+    );
+    return response.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
