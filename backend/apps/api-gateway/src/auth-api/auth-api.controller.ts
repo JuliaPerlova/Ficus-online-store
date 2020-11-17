@@ -6,63 +6,77 @@ import {
     Patch,
     Delete,
     UseGuards,
+    UseFilters,
+    Put,
 } from '@nestjs/common';
 
+import { HttpExceptionFilter } from '../../../shared/filters/http-exception.filter';
 import { AuthApiService } from './auth-api.service';
-import { TokenGuard } from '../../../shared/guards/token.guard';
+import { UserGuard } from '../../../shared/guards/user.guard';
+import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { SignUpDto } from './dto/sign_up.dto';
+import { LoginDto } from './dto/login.dto';
+import { TokenDto } from './dto/token.dto';
+import { EmailDto } from './dto/email.dto';
+import { ConfirmationDto } from './dto/confirmation.dto';
+import { ChangePasswordDto } from './dto/change_password.dto';
+import { DeleteProfileDto } from './dto/delete_profile.dto';
 
 @Controller()
+@ApiTags('authentication')
+@UseFilters(HttpExceptionFilter)
 export class AuthApiController {
     constructor(private readonly appService: AuthApiService) {}
 
     @Post('/auth/login')
-    login(@Body() data: object) {
+    login(@Body() data: LoginDto) {
         return this.appService.login(data);
     }
 
     @Post('/auth/sign_up')
-    signUp(@Body() data: object) {
+    signUp(@Body() data: SignUpDto) {
         return this.appService.signUp(data);
     }
 
-    @Post('/auth/refresh')
-    refreshToken(@Body() { token }) {
+    @Patch('/auth/refresh')
+    refreshToken(@Body() { token }: TokenDto) {
         return this.appService.refreshToken(token);
     }
 
-    @Post('/auth/get_confirm')
-    getConfirmation(@Body() { email }) {
+    @Post('/auth/confirm')
+    getConfirmation(@Body() { email }: EmailDto) {
         return this.appService.getEmailVerification(email);
     }
 
-    @Post('/auth/confirm/:id')
-    confirmEmail(@Param() { id }, @Body() { code }) {
+    @Patch('/auth/confirm')
+    async confirmEmail(@Body() { id, code }: ConfirmationDto) {
         return this.appService.confirmEmail(id, code);
     }
 
-    @Post('/auth/check/:id')
-    checkCode(@Param() { id }, @Body() { code }) {
+    @Put('/auth/check')
+    checkCode(@Body() { id, code }: ConfirmationDto) {
         return this.appService.checkCode(id, code);
     }
 
     @Post('/auth/forgot')
-    forgotPass(@Body() { email }) {
+    forgotPass(@Body() { email }: EmailDto) {
         return this.appService.forgotPass(email);
     }
 
-    @Patch('/auth/change_pass/:id')
-    changePass(@Param() { id }, @Body() { password }) {
+    @Patch('/auth/forgot')
+    changePass(@Body() { id, password }: ChangePasswordDto) {
         return this.appService.changePass(id, password);
     }
 
-    @Delete('/logout/:token')
-    logout(@Param() { token }) {
+    @Delete('/auth/logout/:token')
+    logout(@Param('token') token: string) {
         return this.appService.logout(token);
     }
 
-    @UseGuards(TokenGuard)
-    @Delete('/delete/:id/token/:token')
-    deleteProfile(@Param() { id, token }) {
-        return this.appService.deleteUser(id, token);
+    @UseGuards(UserGuard)
+    @Delete('/auth/:uId/token/:token')
+    @ApiHeader({ name: 'x-auth-token' })
+    deleteProfile(@Param() { uId, token }: DeleteProfileDto) {
+        return this.appService.deleteUser(uId, token);
     }
 }

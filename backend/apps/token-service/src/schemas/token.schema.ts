@@ -9,4 +9,4 @@ export const TokenSchema = new mongoose.Schema({
     expiredAt: { type: Date, default: expireTokenDefault },
 });
 
-TokenSchema.index({ token: 1, uId: 1 }, { unique: true });
+TokenSchema.index({ token: 1 }, { unique: true });

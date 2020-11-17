@@ -42,7 +42,7 @@ export class UserService {
 
     async findUserByUsername(login: string): Promise<IUser[]> {
         return await this.userModel
-            .find({ login: { $regex: login, $options: 'i' } })
+            .find({ login })
             .select('-password')
             .exec();
     }

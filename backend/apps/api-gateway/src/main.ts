@@ -6,8 +6,17 @@ import 'dotenv/config';
 
 declare const module: any;
 
+const allowList = ['http://192.168.88.41:3000', 'http://localhost:3000'];
+
+const corsAllowFunc = (origin, callback) => {
+    const isAllowed = allowList.indexOf(origin) !== -1;
+    return isAllowed ? callback(null, true) : callback(null, false);
+}
+
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule, { cors: true });
+    const app = await NestFactory.create(AppModule);
+
+    app.enableCors({origin: corsAllowFunc});
 
     const options = new DocumentBuilder()
         .setTitle('Api gateway')

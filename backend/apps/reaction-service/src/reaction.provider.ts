@@ -1,6 +1,6 @@
+import { LikeSchema } from 'apps/likes-service/src/schema/likes.schema';
 import { Connection } from 'mongoose';
 import { CommentSchema } from './schemas/comment.schema';
-import { ReplySchema } from './schemas/reply.schema';
 
 export const reactionProviders = [
     {
@@ -9,10 +9,11 @@ export const reactionProviders = [
             connection.model('Comment', CommentSchema),
         inject: ['DATABASE_CONNECTION1'],
     },
+
     {
-        provide: 'REPLY_MODEL',
+        provide: 'LIKE_MODEL',
         useFactory: (connection: Connection) =>
-            connection.model('Reply', ReplySchema),
+            connection.model('Like', LikeSchema),
         inject: ['DATABASE_CONNECTION1'],
     },
 ];

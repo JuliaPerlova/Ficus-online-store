@@ -8,59 +8,56 @@ import {
     Delete,
     Patch,
     Query,
+    Put,
 } from '@nestjs/common';
-import { UserGuard } from 'apps/shared/guards/user.guard';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
+import { UserGuard } from '../../../shared/guards/user.guard';
 import { TokenGuard } from '../../../shared/guards/token.guard';
+import { CreatePostDto } from '../../../post-service/src/dto/post.dto';
 
 import { PostApiService } from './post-api.service';
+import { GetPostsDto } from './dto/get_posts.dto';
 
 @Controller()
+@ApiTags('posts')
 export class PostApiController {
     constructor(private readonly appService: PostApiService) {}
-    @Get('/main/posts')
-    getPosts(@Query() { page, limit }) {
+    @Get('/posts')
+    getPosts(@Query() { page, limit }: GetPostsDto) {
         return this.appService.getPosts({ page, limit });
     }
 
     @UseGuards(UserGuard)
-    @Post('/main/:uId/posts/new')
-    createPost(@Param() { uId }, @Body() data: object) {
+    @Post('/:uId/posts')
+    @ApiHeader({ name: 'x-auth-token' })
+    createPost(@Param('uId') uId: string, @Body() data: CreatePostDto) {
         return this.appService.createPost(uId, data);
     }
 
-    @Get('/main/post/:postId')
-    getPost(@Param() { postId }) {
+    @Get('/posts/:postId')
+    getPost(@Param('postId') postId: string) {
         return this.appService.getPostById(postId);
     }
 
     @UseGuards(TokenGuard)
-    @Get('/main/:uId/posts')
-    getUserPosts(@Param() { uId }) {
+    @Get('/:uId/posts')
+    @ApiHeader({ name: 'x-auth-token' })
+    getUserPosts(@Param('uId') uId: string) {
         return this.appService.getUserPosts(uId);
     }
 
-    @UseGuards(UserGuard)
-    @Patch('/main/:uId/posts/:postId/like')
-    likePost(@Param() { uId, postId }) {
-        return this.appService.likePost(postId, uId);
-    }
-
-    @UseGuards(UserGuard)
-    @Patch('/main/:uId/posts/:postId/dislike')
-    dislikePost(@Param() { uId, postId }) {
-        return this.appService.dislikePost(postId, uId);
-    }
-
-    @UseGuards(UserGuard)
-    @Patch('/main/:uId/posts/:postId')
-    updatePost(@Param() { uId, postId }, @Body() data: object) {
+    @UseGuards(TokenGuard)
+    @Patch('/posts/:postId')
+    @ApiHeader({ name: 'x-auth-token' })
+    updatePost(@Param('postId') postId: string, @Body() data: CreatePostDto) {
         return this.appService.updatePost(postId, data);
     }
 
-    @UseGuards(UserGuard)
-    @Delete('/main/:uId/posts/:postId')
-    deletePost(@Param() { uId, postId }) {
+    @UseGuards(TokenGuard)
+    @Delete('/posts/:postId')
+    @ApiHeader({ name: 'x-auth-token' })
+    deletePost(@Param('postId') postId: string) {
         return this.appService.deletePost(postId);
     }
 }
