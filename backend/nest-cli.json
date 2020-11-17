@@ -61,6 +61,24 @@
       "compilerOptions": {
         "tsConfigPath": "apps/reaction-service/tsconfig.app.json"
       }
+    },
+    "app": {
+      "type": "application",
+      "root": "apps/app",
+      "entryFile": "main",
+      "sourceRoot": "apps/app/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/app/tsconfig.app.json"
+      }
+    },
+    "likes-service": {
+      "type": "application",
+      "root": "apps/likes-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/likes-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/likes-service/tsconfig.app.json"
+      }
     }
   }
 }

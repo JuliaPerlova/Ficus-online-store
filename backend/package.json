@@ -18,7 +18,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/backend/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/api-gateway/test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
@@ -37,6 +37,7 @@
     "date-fns": "^2.16.1",
     "dotenv": "^8.2.0",
     "fastify-swagger": "^3.4.0",
+    "ioredis": "^4.19.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.10",
     "nodemailer": "^6.4.14",

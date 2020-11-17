@@ -27,7 +27,7 @@ export class AuthService {
     async signIn({ email, password }: LoginDto) {
         const user = await this.userService.checkUser(email, password);
         if (!user || user.errors) {
-            throw new RpcException('User was not found');
+            throw new RpcException('Wrong email or password');
         }
 
         if (user.status !== statusEnum.active) {
@@ -51,14 +51,10 @@ export class AuthService {
     }
 
     async signUp(createUserDto: CreateUserDto) {
-        const findEmail = await this.userService.findUserByEmail(
-            createUserDto.email,
-        );
-        console.log(findEmail);
-        const findLogin = await this.userService.findUserByUsername(
-            createUserDto.login,
-        );
-        console.log(findLogin.length === 0);
+        const { email, login } = createUserDto;
+        const findEmail = await this.userService.findUserByEmail(email);
+
+        const findLogin = await this.userService.findUserByUsername(login);
 
         if (findEmail) {
             throw new RpcException(
@@ -66,7 +62,7 @@ export class AuthService {
             );
         }
 
-        if (findLogin.length !== 0) {
+        if (findLogin.length > 0) {
             throw new RpcException('This username is taken. Try another');
         }
 
@@ -84,13 +80,14 @@ export class AuthService {
         const verificationCode = code();
         await this.cache.set(`${user._id}`, verificationCode, { ttl: 360 });
         await this.mailService.confirmEmail(email, verificationCode);
+        console.log(email);
         return user;
     }
 
     async checkCode(userId: string, code: string) {
         let res = await this.cache.get(userId);
-        this.cache.del(userId);
-        return code === res ? true : false;
+        await this.cache.del(userId);
+        return code === `${res}` ? true : false;
     }
 
     async confirmEmail(userId: string, code: string) {
